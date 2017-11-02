@@ -1,0 +1,2 @@
+Placeholder for actual image, download instructions located at:
+https://github.com/SpaceNetChallenge/utilities/tree/master/content/download_instructions
