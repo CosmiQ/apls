@@ -1,0 +1,24 @@
+name: apls_environment
+channels:
+- conda-forge
+- defaults
+dependencies:
+- cython
+- libgdal
+- gdal
+- numpy
+- opencv
+- pip
+- pyproj
+- matplotlib
+- networkx=1.11
+- fiona
+- scikit-image
+- scikit-learn
+- scipy
+- geopandas
+- tqdm
+- shapely=1.5.16
+- pip:
+  - utm
+  - osmnx==0.5.1
