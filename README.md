@@ -7,7 +7,7 @@ README
 
 Code Overview
 
-This code evaluates the Average Path Length Similarity (APLS) metric to measure the difference between ground truth and proposal graphs.  The metric sums the differences in optimal path lengths between all nodes in the ground truth graph G and the proposal graph G’.   See https://medium.com/the-downlinq/spacenet-road-detection-and-routing-challenge-part-i-d4f59d55bfce for further details. 
+This code evaluates the Average Path Length Similarity (APLS) metric to measure the difference between ground truth and proposal graphs.  The metric sums the differences in optimal path lengths between all nodes in the ground truth graph G and the proposal graph G’.   For further details, see [here](https://medium.com/the-downlinq/spacenet-road-detection-and-routing-challenge-part-i-d4f59d55bfce) and [here](https://medium.com/the-downlinq/spacenet-road-detection-and-routing-challenge-part-ii-apls-implementation-92acd86f4094).
 
 ==================
 
@@ -40,8 +40,7 @@ If graphTools.py is not installed (or more likely, if gdal is difficult to insta
 
 The example in main() is self-contained, and demonstrates the process to insert midpoints into ground truth and proposal graphs, get shortest paths, and then compute the metric.  
 
-Instructions for downloading SpaceNet data can be found here:
-https://github.com/SpaceNetChallenge/utilities/tree/master/content/download_instructions
+Instructions for downloading SpaceNet data can be found [here](https://github.com/SpaceNetChallenge/utilities/tree/master/content/download_instructions).
 
 ==================
 
