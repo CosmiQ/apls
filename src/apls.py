@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt
 import time
 import sys
 import os
+import argparse
 
 ########################
 path_apls = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
@@ -1056,22 +1057,22 @@ def plot_metric(C, diffs, figsize=(10,5), scatter_png='', hist_png='',
 def main():
     '''Explore'''
     
-    
-    ###################
-    # default settings
-    max_snap_dist = 5       # buffer distance (meters) around graph 
-    linestring_delta = 50   # distance between midpoints on edges
-    min_path_length = 1.0   # minimum path length to consider for metric
-    is_curved_eps = 10**3   # line curvature above which midpoints will be 
-                            # injected, set to < 0 to inject midpoints on 
-                            # straight lines
-    use_geojson = True#False# True
-    
-                            
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--max_snap_dist', default=5, type=int,
+        help='Buffer distance (meters) around graph')
+    parser.add_argument('--linestring_delta', default=50, type=int,
+        help='Distance between midpoints on edges')
+    parser.add_argument('--min_path_length', default=1.0, type=float,
+        help='Minimum path length to consider for metric')
+    parser.add_argument('--is_curved_eps', default=10**3, type=int,
+        help='Line curvature above which midpoints will be injected, (< 0 to inject midpoints on straight lines)')
+    parser.add_argument('--use_geojson', default=True, type=bool, help='Use GeoJSON')
+    args = parser.parse_args()
+
     # set proposal and ground truth files
 
     ###################
-    if use_geojson:
+    if args.use_geojson:
         # use geojson and pkl files
         # This example is from the Paris AOI, image 1447
         # set graph_files to '' to download aa graph via osmnx and explore
@@ -1122,8 +1123,8 @@ def main():
         # ground truth
         G_gt_init, G_gt_cp, control_points, gt_graph_coords, midpoints = \
             create_gt_graph(gt_file, im_file, network_type='all_private',
-                 linestring_delta=linestring_delta, 
-                 is_curved_eps=is_curved_eps, 
+                 linestring_delta=args.linestring_delta, 
+                 is_curved_eps=args.is_curved_eps, 
                  valid_road_types=valid_road_types,
                  weight=weight,
                  verbose=verbose)
@@ -1153,8 +1154,8 @@ def main():
         # Proposal graph (take this as the ground truth graph with midpoints, then
         # remove some edges)
         G_p_init, _, _ = create_graph_midpoints(G_gt_init.copy(), 
-                                                linestring_delta=linestring_delta, 
-                                                is_curved_eps=is_curved_eps,
+                                                linestring_delta=args.linestring_delta, 
+                                                is_curved_eps=args.is_curved_eps,
                                                 verbose=verbose)
         
         # randomly remove edges
@@ -1190,8 +1191,8 @@ def main():
             all_pairs_lengths_gt_native, all_pairs_lengths_prop_native, \
             all_pairs_lengths_gt_prime, all_pairs_lengths_prop_prime  = \
         make_graphs(G_gt_init, G_p_init, 
-                  weight='length', linestring_delta=linestring_delta, 
-                  is_curved_eps=is_curved_eps,  max_snap_dist=max_snap_dist,
+                  weight='length', linestring_delta=args.linestring_delta, 
+                  is_curved_eps=args.is_curved_eps,  max_snap_dist=args.max_snap_dist,
                   verbose=verbose)
 
     # midpoints
@@ -1300,7 +1301,7 @@ def main():
     ### Metric
     C = compute_metric(all_pairs_lengths_gt_native, all_pairs_lengths_prop_native, 
             all_pairs_lengths_gt_prime, all_pairs_lengths_prop_prime,
-            min_path_length=min_path_length, 
+            min_path_length=args.min_path_length, 
             verbose=verbose,
             res_dir=outdir)
 
