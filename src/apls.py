@@ -6,10 +6,6 @@ Created on Tue Aug 29 12:32:19 2017
 @author: avanetten
 """
 
-########################
-path_apls = '/path/to/apls'
-########################
-
 import networkx as nx
 import osmnx as ox   # https://github.com/gboeing/osmnx
 import scipy.spatial
@@ -25,6 +21,10 @@ import matplotlib.pyplot as plt
 import time
 import sys
 import os
+
+########################
+path_apls = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
+########################
 
 # add path
 sys.path.extend([os.path.join(path_apls, 'src')])
