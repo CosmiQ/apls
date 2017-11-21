@@ -48,9 +48,9 @@ Instructions for downloading SpaceNet data can be found [here](https://github.co
 
 Use conda to install all packages https://conda.io/miniconda.html (currently tested with OSX and python 2)
 
-	# change line 10 of src/apls.py to reflect the apls directory
 	cd /path/to/apls/
-	conda env create -f apls_environment.yml
+	conda env create -f apls_environment.yml   # to deactivate environment: source deactivate
 	source activate apls_environment
-	python src/apls.py
-	# to deactivate environment: source deactivate
+	python src/apls.py --path_apls=/path/to/apls
+	# for further details: python apls_light.py --help
+	
