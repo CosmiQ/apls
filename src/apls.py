@@ -21,6 +21,17 @@ import time
 import sys
 import os
 
+# get current path
+path_apls_src = os.path.dirname(os.path.realpath(__file__))
+# add path and import graphTools
+sys.path.extend([path_apls_src])
+import graphTools
+reload(graphTools)
+
+path_apls = os.path.dirname(path_apls_src)
+print "path_apls:", path_apls
+
+
 ###############################################################################
 def create_edge_linestrings(G, remove_redundant=True):
     '''Ensure all edges have 'geometry' tag, use shapely linestrings
@@ -1064,8 +1075,6 @@ def main():
     '''Explore'''
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--path_apls', default='/cosmiq/apls/apls',
-        type=str, help='Path to APLS directory')
     parser.add_argument('--max_snap_dist', default=5, type=int,
         help='Buffer distance (meters) around graph')
     parser.add_argument('--linestring_delta', default=50, type=int,
@@ -1089,12 +1098,6 @@ def main():
             + "proposal graph")
             
     args = parser.parse_args()
-
-    # add path
-    sys.path.extend([os.path.join(args.path_apls, 'src')])
-    import graphTools
-    reload(graphTools)
-
                             
     ###################
     # plotting and exploring settings
@@ -1133,8 +1136,8 @@ def main():
         #prop_dir = os.path.join(path_apls, 'topcoder_metrictest1/to_geojson/proposal')
         
         outdir_root = 'topcoder_training_tests'
-        truth_dir = os.path.join(args.path_apls, 'topcoder_training_tests/to_geojson/truthGeoJson')
-        prop_dir = os.path.join(args.path_apls, 'topcoder_training_tests/to_geojson/proposalGeoJson')
+        truth_dir = os.path.join(path_apls, 'topcoder_training_tests/to_geojson/truthGeoJson')
+        prop_dir = os.path.join(path_apls, 'topcoder_training_tests/to_geojson/proposalGeoJson')
         
         gt_list, gt_raw_list, gp_list, root_list = [], [], [], []
         name_list = os.listdir(truth_dir)
@@ -1191,8 +1194,8 @@ def main():
     # ingest ground truth and propoal geojsons created in qgis
     if args.test_method == 'qgis_geojson':
         outroot = 'qgis_test0'
-        gt_file = os.path.join(args.path_apls, 'qgis_tests/test0_gt.geojson')
-        prop_file = os.path.join(args.path_apls, 'qgis_tests/test0_prop.geojson')
+        gt_file = os.path.join(path_apls, 'qgis_tests/test0_gt.geojson')
+        prop_file = os.path.join(path_apls, 'qgis_tests/test0_prop.geojson')
         im_file = '' #os.path.join(path_apls, 'qgis_tests/RGB-PanSharpen_AOI_2_Vegas_img49.tif')
         valid_road_types = set([])   # assume no road type in qgis geojsons
 
@@ -1230,10 +1233,10 @@ def main():
         # This example is from the Paris AOI, image 1447
         outroot = 'RGB-PanSharpen_img1447'
         # set graph_files to '' to download aa graph via osmnx and explore
-        gt_file = os.path.join(args.path_apls, 'sample_data/OSMroads_img1447.geojson')
+        gt_file = os.path.join(path_apls, 'sample_data/OSMroads_img1447.geojson')
         # the proposal file can be created be exporting a networkx graph via:
         #        nx.write_gpickle(proposal_graph, outfile_pkl)
-        prop_file = os.path.join(args.path_apls, 'sample_data/proposal_graph_1447.pkl')
+        prop_file = os.path.join(path_apls, 'sample_data/proposal_graph_1447.pkl')
         im_file = ''#os.path.join(path_apls, 'sample_data/RGB-PanSharpen_img1447.tif')
     
         # ground truth
@@ -1304,7 +1307,7 @@ def main():
         t0 = time.time()
         ##################
         # make dirs
-        outdir_base = os.path.join(args.path_apls, 'example_output_ims')
+        outdir_base = os.path.join(path_apls, 'example_output_ims')
         outdir_base2 = os.path.join(outdir_base, outdir_root)
         outdir = os.path.join(outdir_base2, outroot)
         d_list = [outdir_base, outdir_base2, outdir]
