@@ -51,6 +51,6 @@ Use conda to install all packages https://conda.io/miniconda.html (currently tes
 	cd /path/to/apls/
 	conda env create -f apls_environment.yml   # to deactivate environment: source deactivate
 	source activate apls_environment
-	python src/apls.py --path_apls=/path/to/apls
+	python src/apls.py 
 	# for further details: python apls_light.py --help
 	
