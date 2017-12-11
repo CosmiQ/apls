@@ -61,7 +61,8 @@ def main():
                                outputFormat='GTiff',
                                rescale_type='rescale',
                                percentiles=[2,98])
-            
+
+        # determine output files
         label_file = os.path.join(path_labels, 'spacenetroads_AOI_2_Vegas_' \
                                      + name_root + '.geojson')
         label_file_tot = os.path.join(path_labels, label_file)
