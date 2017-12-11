@@ -82,7 +82,7 @@ def main():
                                                       plot_file=plot_file, 
                                                       figsize= (6,6), #(13,4), 
                                                       fontsize=8,
-                                                      dpi=500, show_plot=False, 
+                                                      dpi=200, show_plot=False, 
                                                       verbose=False)  
     return
         
