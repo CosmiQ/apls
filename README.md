@@ -44,7 +44,7 @@ Instructions for downloading SpaceNet data can be found [here](https://github.co
 
 ==================
 
-3.0:	Execution
+3.0:	apls.py Execution
 
 Use conda to install all packages https://conda.io/miniconda.html (currently tested with OSX and python 2)
 
@@ -62,10 +62,22 @@ Use conda to install all packages https://conda.io/miniconda.html (currently tes
 
 ==================
 
-4.0:	Outputs
+4.0:	apls.py Outputs
 
 Running apls.py yields a number of plots in the example_output_ims directory, along with the APLS score
 
 ![Alt text](/example_output_ims/pkl/RGB-PanSharpen_img1447/single_source_route_ground_truth.png?raw=true "Figure 1")
 
 ![Alt text](/example_output_ims/pkl/RGB-PanSharpen_img1447/all_pairs_paths_diffs_prop_to_gt.png?raw=true "Figure 2")
+
+
+==================
+
+5.0:	create_spacenet_masks.py
+
+Run this script to create training masks with spacenet geojsons
+
+	cd /path/to/apls/src
+	python create_spacenet_masks.py
+	# results are saved in example_output_ims/AOI_2_Vegas_Train
+
