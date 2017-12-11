@@ -51,6 +51,18 @@ Use conda to install all packages https://conda.io/miniconda.html (currently tes
 	cd /path/to/apls/
 	conda env create -f apls_environment.yml   # to deactivate environment: source deactivate
 	source activate apls_environment
-	python src/apls.py --path_apls=/path/to/apls
-	# for further details: python apls_light.py --help
+	python src/apls.py 
+	# for further details: python apls.py --help
+	#     primary option will 'test_method', experiment with: 
+			 python apls.py test_method=pkl
+			 python apls.py test_method=test_geojson
+			 python apls.py test_method=osmnx
+			 
+			 
 	
+
+==================
+
+4.0:	Outputs
+
+Running apls.py yields a number of plots in the example_output_ims directory, along with the APLS score

@@ -13,52 +13,12 @@ from osmnx.utils import log
 from osmnx import core
 import networkx as nx
 import geopandas as gpd
-from shapely.geometry import (Point, LineString, MultiLineString, 
-                              Polygon, MultiPolygon)
+from shapely.geometry import (Point)
+                            #, LineString, MultiLineString, 
+                            #  Polygon, MultiPolygon)
 import numpy as np
 import fiona
 import shapely.geometry
-from osgeo import gdal, osr, ogr
-import osmnx as ox
-
-
-
-###############################################################################
-def latlon2pixel(lat, lon, input_raster='', targetsr='', geom_transform=''):
-    # type: (object, object, object, object, object) -> object
-    '''from spacenet geotools'''
-
-    sourcesr = osr.SpatialReference()
-    sourcesr.ImportFromEPSG(4326)
-
-    geom = ogr.Geometry(ogr.wkbPoint)
-    geom.AddPoint(lon, lat)
-
-    if targetsr == '':
-        src_raster = gdal.Open(input_raster)
-        targetsr = osr.SpatialReference()
-        targetsr.ImportFromWkt(src_raster.GetProjectionRef())
-    coord_trans = osr.CoordinateTransformation(sourcesr, targetsr)
-    if geom_transform == '':
-        src_raster = gdal.Open(input_raster)
-        transform = src_raster.GetGeoTransform()
-    else:
-        transform = geom_transform
-
-    x_origin = transform[0]
-    # print(x_origin)
-    y_origin = transform[3]
-    # print(y_origin)
-    pixel_width = transform[1]
-    # print(pixel_width)
-    pixel_height = transform[5]
-    # print(pixel_height)
-    geom.Transform(coord_trans)
-    # print(geom.GetPoint())
-    x_pix = (geom.GetPoint()[0] - x_origin) / pixel_width
-    y_pix = (geom.GetPoint()[1] - y_origin) / pixel_height
-
-    return (x_pix, y_pix)
 
 ###############################################################################
 def parse_OGR_nodes_paths(vectorFileName, osmidx=0, osmNodeidx = 0,
@@ -80,7 +40,6 @@ def parse_OGR_nodes_paths(vectorFileName, osmidx=0, osmNodeidx = 0,
     valid_road_types is a set of road types to be allowed
     """
 
-    #verbose=True
 
     #dataSource = ogr.Open(vectorFileName, 0)
 
@@ -113,19 +72,22 @@ def parse_OGR_nodes_paths(vectorFileName, osmidx=0, osmNodeidx = 0,
             if (len(valid_road_types) > 0) and \
                       (geom['type'] == 'LineString' or geom['type'] == 'MultiLineString'):
                 if road_type not in valid_road_types:
-
                     if verbose:
-                        print("skipping...")
+                        print("Invalid road type, skipping...")
                     continue
             ###################
+            
+            # skip empty linestrings
+            if 'LINESTRING EMPTY' in properties.values():
+                continue
             
             osmidx = osmidx + 1
 
             if geom['type']=='LineString':
                 #print osmNodeidx
                 lineString = shapely.geometry.shape(geom)
-                #print "geom:", geom
-                #print "linestring:", lineString
+                #if len(geom['coordinates']) == 0:
+                #    continue
                 path, nodeList, osmNodeidx, nodeListGpd = processLineStringFeature(lineString,
                                                                        osmidx,
                                                                        osmNodeidx,
@@ -295,33 +257,3 @@ def create_graphGeoJson(geoJson, name='unnamed', retain_all=True,
 
     return G
 
-###############################################################################
-def createBufferGeoPandas(inGDF, bufferDistanceMeters=5, 
-                          bufferRoundness=1, projectToUTM=True):
-    '''Create a buffer around the lines of the geojson'''
-    
-    #inGDF = gpd.read_file(geoJsonFileName)
-    if len(inGDF) == 0:
-        return []
-
-    # Transform gdf Roadlines into UTM so that Buffer makes sense
-    if projectToUTM:
-        tmpGDF = ox.project_gdf(inGDF)
-    else:
-        tmpGDF = inGDF
-
-    gdf_utm_buffer = tmpGDF
-
-    # perform Buffer to produce polygons from Line Segments
-    gdf_utm_buffer['geometry'] = tmpGDF.buffer(bufferDistanceMeters,
-                                                bufferRoundness)
-
-    gdf_utm_dissolve = gdf_utm_buffer.dissolve(by='class')
-    gdf_utm_dissolve.crs = gdf_utm_buffer.crs
-
-    if projectToUTM:
-        gdf_buffer = gdf_utm_dissolve.to_crs(inGDF.crs)
-    else:
-        gdf_buffer = gdf_utm_dissolve
-
-    return gdf_buffer

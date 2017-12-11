@@ -1,0 +1,3 @@
+Ground Truth Nodes Snapped Onto Proposal Score: 0.463188008018
+Proposal Nodes Snapped Onto Ground Truth Score: 0.989096345766
+Total Score: 0.630919922727
