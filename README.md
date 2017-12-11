@@ -53,12 +53,15 @@ Use conda to install all packages https://conda.io/miniconda.html (currently tes
 	source activate apls_environment
 	python src/apls.py 
 	# for further details: python apls.py --help
+<<<<<<< HEAD
 	#     primary option will 'test_method', experiment with: 
 			 python apls.py test_method=pkl
 			 python apls.py test_method=test_geojson
 			 python apls.py test_method=osmnx
 			 
 			 
+=======
+>>>>>>> origin/master
 	
 
 ==================

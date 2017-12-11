@@ -30,6 +30,17 @@ sys.path.extend([path_apls_src])
 import graphTools, apls_tools
     
 
+# get current path
+path_apls_src = os.path.dirname(os.path.realpath(__file__))
+# add path and import graphTools
+sys.path.extend([path_apls_src])
+import graphTools
+reload(graphTools)
+
+path_apls = os.path.dirname(path_apls_src)
+print "path_apls:", path_apls
+
+
 ###############################################################################
 def create_edge_linestrings(G, remove_redundant=True, verbose=False):
     '''Ensure all edges have 'geometry' tag, use shapely linestrings
@@ -1117,6 +1128,7 @@ def main():
             + "proposal graph")
             
     args = parser.parse_args()
+<<<<<<< HEAD
 
     # for ipython...
     #path_apls = '/Users/avanetten/Documents/cosmiq/apls/apls'
@@ -1125,6 +1137,8 @@ def main():
     #sys.path.extend([os.path.join(path_apls, 'src')])
     #import graphTools
     #reload(graphTools)
+=======
+>>>>>>> origin/master
                             
     ###################
     # plotting and exploring settings
@@ -1216,12 +1230,21 @@ def main():
         
     ###################
     # ingest ground truth and propoal geojsons created in qgis
+<<<<<<< HEAD
     if args.test_method == 'test_geojson':
         outroot = 'test0'
         gt_file = os.path.join(path_apls, 'sample_data/sample_geojson/test0_gt.geojson')
         prop_file = os.path.join(path_apls, 'sample_data/sample_geojson/test0_prop.geojson')
         im_file = '' #os.path.join(path_apls, 'sample_data/sample_geojson/RGB-PanSharpen_AOI_2_Vegas_img49.tif')
         valid_road_types = set([])   # assume no road type
+=======
+    if args.test_method == 'qgis_geojson':
+        outroot = 'qgis_test0'
+        gt_file = os.path.join(path_apls, 'qgis_tests/test0_gt.geojson')
+        prop_file = os.path.join(path_apls, 'qgis_tests/test0_prop.geojson')
+        im_file = '' #os.path.join(path_apls, 'qgis_tests/RGB-PanSharpen_AOI_2_Vegas_img49.tif')
+        valid_road_types = set([])   # assume no road type in qgis geojsons
+>>>>>>> origin/master
 
         # ground truth
         osmidx, osmNodeidx = 0, 0
@@ -1255,10 +1278,17 @@ def main():
         # This example is from the Paris AOI, image 1447
         outroot = 'RGB-PanSharpen_img1447'
         # set graph_files to '' to download aa graph via osmnx and explore
+<<<<<<< HEAD
         gt_file = os.path.join(path_apls, 'sample_data/pkl/OSMroads_img1447.geojson')
         # the proposal file can be created be exporting a networkx graph via:
         #        nx.write_gpickle(proposal_graph, outfile_pkl)
         prop_file = os.path.join(path_apls, 'sample_data/pkl/proposal_graph_1447.pkl')
+=======
+        gt_file = os.path.join(path_apls, 'sample_data/OSMroads_img1447.geojson')
+        # the proposal file can be created be exporting a networkx graph via:
+        #        nx.write_gpickle(proposal_graph, outfile_pkl)
+        prop_file = os.path.join(path_apls, 'sample_data/proposal_graph_1447.pkl')
+>>>>>>> origin/master
         im_file = ''#os.path.join(path_apls, 'sample_data/RGB-PanSharpen_img1447.tif')
     
         # ground truth
