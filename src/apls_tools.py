@@ -323,7 +323,10 @@ def create_buffer_geopandas(geoJsonFileName, bufferDistanceMeters=2,
     Return a geodataframe.
     '''
     
-    inGDF = gpd.read_file(geoJsonFileName)
+    try:
+        inGDF = gpd.read_file(geoJsonFileName)
+    except:
+        return []
     
     # set a few columns that we will need later
     inGDF['type'] = inGDF['road_type'].values            
@@ -331,7 +334,7 @@ def create_buffer_geopandas(geoJsonFileName, bufferDistanceMeters=2,
     inGDF['highway'] = 'highway'  
     
     if len(inGDF) == 0:
-        return [], []
+        return []
 
     # Transform gdf Roadlines into UTM so that Buffer makes sense
     if projectToUTM:
@@ -354,7 +357,6 @@ def create_buffer_geopandas(geoJsonFileName, bufferDistanceMeters=2,
         gdf_buffer = gdf_utm_dissolve
 
     return gdf_buffer
-
 
 ###############################################################################
 def gdf_to_array(gdf, im_file, output_raster, burnValue=150):
