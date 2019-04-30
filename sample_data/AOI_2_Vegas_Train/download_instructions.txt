@@ -1,0 +1,1 @@
+Download AOI_2_Vegas_Train data from https://aws.amazon.com/public-datasets/spacenet/

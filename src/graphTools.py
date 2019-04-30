@@ -8,6 +8,7 @@ Created on Tue Aug 29 13:30:14 2017
 
 '''Heavily modified from  spacenet utilities graphtools'''
 
+import os
 import time
 from osmnx.utils import log
 from osmnx import core
@@ -21,10 +22,12 @@ import fiona
 import shapely.geometry
 
 ###############################################################################
-def parse_OGR_nodes_paths(vectorFileName, osmidx=0, osmNodeidx = 0,
+def parse_OGR_nodes_paths(vectorFileName, osmidx=0, osmNodeidx=00,
                           nodeListGpd=gpd.GeoDataFrame(),
-                          valid_road_types=set([]), verbose=True,
-                          roadTypeField='type'):
+                          valid_road_types=set([]), 
+                          roadTypeField='type',
+                          verbose=True,
+                          super_verbose=False):
     """
     Construct dicts of nodes and paths with key=osmid and value=dict of attributes.
 
@@ -40,14 +43,21 @@ def parse_OGR_nodes_paths(vectorFileName, osmidx=0, osmNodeidx = 0,
     valid_road_types is a set of road types to be allowed
     """
 
+    # ensure valid vectorFileName
+    try:
+        source = fiona.open(vectorFileName, 'r')
+        doit = True
+    except:
+        doit = False
+        return {}, {}
 
     #dataSource = ogr.Open(vectorFileName, 0)
-
-    with fiona.open(vectorFileName, 'r') as source:
+    #with fiona.open(vectorFileName, 'r') as source:
+    if doit:
         #layer = dataSource.GetLayer()
         nodes = {}
         paths = {}
-        for feature in source:
+        for i,feature in enumerate(source):
 
             geom = feature['geometry']
             properties = feature['properties']
@@ -61,10 +71,11 @@ def parse_OGR_nodes_paths(vectorFileName, osmidx=0, osmNodeidx = 0,
             else:
                 road_type = 'None'
             
-            if verbose:
-                print("\ngeom:", geom)
-                print("   properties:", properties)
-                print("   road_type:", road_type)
+            if ((i % 100) == 0) and verbose:
+                print(("\n", i, "/", len(source)))
+                print(("   geom:", geom))
+                print(("   properties:", properties))
+                print(("   road_type:", road_type))
                 
             ##################
             # check if road type allowable, continue if not
@@ -78,16 +89,19 @@ def parse_OGR_nodes_paths(vectorFileName, osmidx=0, osmNodeidx = 0,
             ###################
             
             # skip empty linestrings
-            if 'LINESTRING EMPTY' in properties.values():
+            if 'LINESTRING EMPTY' in list(properties.values()):
                 continue
             
-            osmidx = osmidx + 1
+            osmidx = int(osmidx + 1)
 
             if geom['type']=='LineString':
                 #print osmNodeidx
                 lineString = shapely.geometry.shape(geom)
+                if super_verbose:
+                    print ("lineString.wkt:", lineString.wkt)
                 #if len(geom['coordinates']) == 0:
                 #    continue
+                
                 path, nodeList, osmNodeidx, nodeListGpd = processLineStringFeature(lineString,
                                                                        osmidx,
                                                                        osmNodeidx,
@@ -96,6 +110,7 @@ def parse_OGR_nodes_paths(vectorFileName, osmidx=0, osmNodeidx = 0,
                 #print(nodeListGpd.head())
                 osmNodeidx = osmNodeidx+1
                 osmidx = osmidx+1
+                #print ("nodeList:", nodeList)
                 nodes.update(nodeList)
                 paths[osmidx] = path
                 #print(geom.GetGeometryName())
@@ -114,6 +129,8 @@ def parse_OGR_nodes_paths(vectorFileName, osmidx=0, osmNodeidx = 0,
                     nodes.update(nodeList)
                     paths[osmidx] = path
 
+        source.close()
+        
     return nodes, paths
 
 ###############################################################################
@@ -122,12 +139,16 @@ def processLineStringFeature(lineString, keyEdge, osmNodeidx,
                              roadTypeField='type'):
     # iterage over points in LineString
     
+    #print ("lineString:", lineString)
+
     osmNodeidx = osmNodeidx + 1
     path = {}
     nodes = {}
     path['osmid'] = keyEdge
 
     nodeList = []
+    
+    
     for point in lineString.coords:
 
         pointShp = shapely.geometry.shape(Point(point))
@@ -140,7 +161,9 @@ def processLineStringFeature(lineString, keyEdge, osmNodeidx,
 
         if nodeId.size == 0:
             nodeId = osmNodeidx
-            nodeListGpd = nodeListGpd.append({'geometry': pointShp, 'osmid': osmNodeidx}, ignore_index=True)
+            nodeListGpd = nodeListGpd.append({'geometry': pointShp, 
+                                              'osmid': osmNodeidx}, 
+                                               ignore_index=True)
             osmNodeidx = osmNodeidx + 1
 
             node = {}
@@ -150,7 +173,7 @@ def processLineStringFeature(lineString, keyEdge, osmNodeidx,
             node['osmid'] = nodeId
             
             # add properties
-            for key,value in properties.items():
+            for key,value in list(properties.items()):
                 node[key] = value
             if roadTypeField in properties:
                 node['highway'] = properties['type']
@@ -167,7 +190,7 @@ def processLineStringFeature(lineString, keyEdge, osmNodeidx,
 
     path['nodes'] = nodeList
     # add properties
-    for key,value in properties.items():
+    for key,value in list(properties.items()):
         path[key] = value
     # also set 'highway' flag
     if roadTypeField in properties:
@@ -182,7 +205,8 @@ def processLineStringFeature(lineString, keyEdge, osmNodeidx,
 def create_graphGeoJson(geoJson, name='unnamed', retain_all=True, 
                         network_type='all_private', valid_road_types=set([]),
                         roadTypeField='type',
-                        verbose=True, osmidx=0, osmNodeidx=0):
+                        osmidx=0, osmNodeidx=0,
+                        verbose=True, super_verbose=False):
     """
     Create a networkx graph from OSM data.
 
@@ -214,46 +238,82 @@ def create_graphGeoJson(geoJson, name='unnamed', retain_all=True,
     # extract nodes and paths from the downloaded osm data
     nodes = {}
     paths = {}
-
+    
+    if verbose:
+        print ("Running parse_OGR_nodes_paths...")
     nodes_temp, paths_temp = parse_OGR_nodes_paths(geoJson, 
                                                    valid_road_types=valid_road_types,
                                                    verbose=verbose,
+                                                   super_verbose=super_verbose,
                                                    osmidx=osmidx, osmNodeidx=osmNodeidx,
                                                    roadTypeField=roadTypeField)
 
     if len(nodes_temp)==0:
         return G
     if verbose:
-        print("nodes_temp:", nodes_temp)
-        print("paths_temp:", paths_temp)
+        print(("len(nodes_temp):", len(nodes_temp)))
+        print(("len(paths_temp):", len(paths_temp)))
         
+    # add node props
     for key, value in list(nodes_temp.items()):
         nodes[key] = value
-        if verbose:
-            print("node key:", key)
-            print("  node value:", value)
+        if super_verbose:
+            print(("node key:", key))
+            print(("  node value:", value))
+            
+    # add edge props
     for key, value in list(paths_temp.items()):
         paths[key] = value
-        if verbose:
-            print("path key:", key)
-            print("  path value:", value)
-    # add each osm node to the graph
+        if super_verbose:
+            print(("path key:", key))
+            print(("  path value:", value))
+            
+    # add each node to the graph
     for node, data in list(nodes.items()):
         G.add_node(node, **data)
 
-    # add each osm way (aka, path) to the graph
-    if verbose:
-        print("paths:", paths)
+    # add each way (aka, path) to the graph
+    if super_verbose:
+        print(("paths:", paths))
     G = core.add_paths(G, paths, network_type)
 
     # retain only the largest connected component, if caller did not set retain_all=True
     if not retain_all:
         G = core.get_largest_component(G)
 
-    log('Created graph with {:,} nodes and {:,} edges in {:,.2f} seconds'.format(len(list(G.nodes())), len(list(G.edges())), time.time()-start_time))
 
     # add length (great circle distance between nodes) attribute to each edge to use as weight
     G = core.add_edge_lengths(G)
 
+
+    log('Created graph with {:,} nodes and {:,} edges in {:,.2f} seconds'.format(len(list(G.nodes())), len(list(G.edges())), time.time()-start_time))
+
     return G
+
+
+
+###############################################################################
+if __name__ == "__main__":
+
+    # test
+    truth_dir = '/raid/cosmiq/spacenet/data/spacenetv2/spacenetLabels/AOI_2_Vegas/400m_noveau/'
+    out_pkl = '/raid/cosmiq/spacenet/data/spacenetv2/spacenetLabels/AOI_2_Vegas/spacenetroads_AOI_2_Vegas_img10_graphTools_speed.pkl'
+
+    #truth_dir = '/raid/cosmiq/spacenet/data/spacenetv2/spacenetLabels/AOI_2_Vegas/400m/'
+    #out_pkl = '/raid/cosmiq/spacenet/data/spacenetv2/spacenetLabels/AOI_2_Vegas/spacenetroads_AOI_2_Vegas_img10_graphTools.pkl'
+
+    geoJson = os.path.join(truth_dir, 'spacenetroads_AOI_2_Vegas_img10.geojson')
+    G0 = create_graphGeoJson(geoJson, name='unnamed', 
+                                            retain_all=True, 
+                                            verbose=True)
+    # pkl
+    nx.write_gpickle(G0, out_pkl)
+    
+    
+
+'''
+
+python /raid/cosmiq/apls/apls/src/graphTools.py
+
+'''
 
