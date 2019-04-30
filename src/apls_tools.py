@@ -609,6 +609,7 @@ def create_buffer_geopandas(geoJsonFileName, bufferDistanceMeters=2,
 
     return gdf_buffer
 
+<<<<<<< HEAD
 ###############################################################################
 def CreateMultiBandGeoTiff(OutPath, Array):
     '''
@@ -626,6 +627,8 @@ def CreateMultiBandGeoTiff(OutPath, Array):
     
     return OutPath
 
+=======
+>>>>>>> f001ba4a68c2d42273fc5fe6f4d9ed29760cb97e
 ###############################################################################
 def gdf_to_array(gdf, im_file, output_raster, burnValue=150,
                  mask_burn_val_key='', compress=True,
