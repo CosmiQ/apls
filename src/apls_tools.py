@@ -352,7 +352,7 @@ def convert_to_8Bit(inputRaster, outputRaster,
     '''
     Convert 16bit image to 8bit
     rescale_type = [clip, rescale]
-        if clip, scaling is done sctricly between 0 65535 
+        if clip, scaling is done strictly between 0 65535 
         if rescale, each band is rescaled to a min and max 
         set by percentiles
     '''
