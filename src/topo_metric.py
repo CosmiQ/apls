@@ -65,7 +65,6 @@ def get_node_positions(G_, x_coord='x', y_coord='y'):
 ###############################################################################
 def G_to_kdtree(G, x_coord='x', y_coord='y'):
     '''
-    From shackleton_g_funcs.py
     Create kd tree from node positions
     (x, y) = (lon, lat)
     return kd tree and kd_idx_dic
@@ -102,7 +101,6 @@ def G_to_kdtree(G, x_coord='x', y_coord='y'):
 ###############################################################################
 def query_kd_ball(kdtree, kd_idx_dic, point, r_meters, keep_point=True):
     '''
-    from shackleton_utils.py
     Query the kd-tree for neighbors within a distance r of the point
     given by lat, lon
     Return nearest node names, distances, nearest node indexes
@@ -127,7 +125,6 @@ def query_kd_ball(kdtree, kd_idx_dic, point, r_meters, keep_point=True):
 ###############################################################################
 def query_kd_nearest(kdtree, kd_idx_dic, point, n_neighbors=10, keep_point=True):
     '''
-    from shackleton_utils.py
     Query the kd-tree for neighbors 
     given by lat, lon
     Return nearest node names, distances, nearest node indexes
@@ -149,7 +146,6 @@ def query_kd_nearest(kdtree, kd_idx_dic, point, n_neighbors=10, keep_point=True)
 ###############################################################################
 def query_kd_ball_latlon(kdtree, kd_idx_dic, lat, lon, r_km):
     '''
-    from shackleton_utils.py
     Query the kd-tree for neighbors within a distance r of the point
     given by lat, lon
     Return nearest node names, distances, nearest node indexes
