@@ -7,23 +7,12 @@ README
 
 Code Overview
 
-This code evaluates the Average Path Length Similarity (APLS) metric to measure the difference between ground truth and proposal graphs.  The metric sums the differences in optimal path lengths between all nodes in the ground truth graph G and the proposal graph G’.   For further details, see [Blog1](https://medium.com/the-downlinq/spacenet-road-detection-and-routing-challenge-part-i-d4f59d55bfce) and [Blog2](https://medium.com/the-downlinq/spacenet-road-detection-and-routing-challenge-part-ii-apls-implementation-92acd86f4094).  For details on how to prepare data for the SpaceNet Road Detection and Routing Challenge, see [Blog3](https://medium.com/the-downlinq/creating-training-datasets-for-the-spacenet-road-detection-and-routing-challenge-6f970d413e2f).
+This code evaluates the Average Path Length Similarity (APLS) metric to measure the difference between ground truth and proposal graphs.  The metric sums the differences in optimal path lengths between all nodes in the ground truth graph G and the proposal graph G’.   For further details, see [Blog1](https://medium.com/the-downlinq/spacenet-road-detection-and-routing-challenge-part-i-d4f59d55bfce) and [Blog2](https://medium.com/the-downlinq/spacenet-road-detection-and-routing-challenge-part-ii-apls-implementation-92acd86f4094).  
 
 ==================
 
-1.0:	Packages required (included in apls_environment.yml):
+1.0:	Packages required (See apls_environment.yml):
 
-
-	Networkx
-	Osmnx
-	Scipy
-	Numpy
-	Utm
-	Shapely
-	Fiona
-	Osgeo (gdal, osr, ogr)
-	Geopandas
-	Matplotlib
 ==================
 
 2.0: graphTools.py
@@ -46,17 +35,14 @@ Instructions for downloading SpaceNet data can be found [here](https://github.co
 
 3.0:	apls.py Execution
 
-Use conda to install all packages https://conda.io/miniconda.html (currently tested with OSX and python 3.6)
+Use conda to install all packages https://conda.io/miniconda.html (currently tested with OSX and python 2)
 
-	cd /path/to/apls/src
+	cd   /raid/cosmiq/apls/apls
 	conda env create -f apls_environment.yml   # to deactivate environment: source deactivate
 	source activate apls_environment
 	python apls.py 
 	# for further details: python apls.py --help
-	#     primary option will 'test_method', experiment with: 
-	#		 python apls.py test_method=pkl
-	#		 python apls.py test_method=test_geojson
-	#		 python apls.py test_method=osmnx
+
 			 
 
 

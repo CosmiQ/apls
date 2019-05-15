@@ -1,24 +1,21 @@
-name: apls_environment
+name: apls
 channels:
-- conda-forge
-- defaults
+  - conda-forge
+  - defaults
 dependencies:
-- cython
-- libgdal
-- gdal
-- numpy
-- opencv
-- pip
-- pyproj
-- matplotlib
-- networkx=1.11
-- fiona
-- scikit-image
-- scikit-learn
-- scipy
-- geopandas
-- tqdm
-- shapely=1.5.16
-- pip:
-  - utm
-  - osmnx==0.5.1
+  - python=3.6
+  - pip=19.0
+  - shapely=1.6.4
+  - fiona=1.8.6
+  - pandas=0.24.2
+  - geopandas=0.5.0
+  - opencv=3.4.4
+  - numpy=1.16.3
+  - gdal=2.4.1
+  - rtree=0.8.3
+  - networkx=2.3
+  - rasterio=1.0.22
+  - scipy=1.2.1
+  - scikit-image=0.15.0
+  - pip:
+    - affine==2.2.2
