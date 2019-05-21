@@ -85,5 +85,5 @@ Run this script to create training masks with spacenet geojsons
 
 	cd /path/to/apls/src
 	python create_spacenet_masks.py
-	# results are saved in example_output_ims/AOI_2_Vegas_Train
+	# results are saved in outputs
 
