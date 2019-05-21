@@ -52,9 +52,9 @@ Use conda to install all packages https://conda.io/miniconda.html (currently tes
 
 Running apls.py yields a number of plots in the example_output_ims directory, along with the APLS score
 
-![Alt text](/example_output_ims/pkl/RGB-PanSharpen_img1447/single_source_route_ground_truth.png?raw=true "Figure 1")
+![Alt text](/sample_data/_sample_outputs/single_source_route_ground_truth.png?raw=true "Figure 1")
 
-![Alt text](/example_output_ims/pkl/RGB-PanSharpen_img1447/all_pairs_paths_diffs_prop_to_gt.png?raw=true "Figure 2")
+![Alt text](/sample_data/_sample_outputs/all_pairs_paths_diffs_prop_to_gt.png?raw=true "Figure 2")
 
 
 ==================
