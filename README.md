@@ -81,9 +81,4 @@ ____
 
 ### SpaceNet Training Masks
 
-Run this script to create training masks with spacenet geojsons
-
-	cd /path/to/apls/src
-	python create_spacenet_masks.py
-	# results are saved in outputs
-
+Run the _create\_spacenet\_masks.py_ script to create training masks with spacenet geojsons
