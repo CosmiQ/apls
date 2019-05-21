@@ -1,3 +1,0 @@
-Ground Truth Nodes Snapped Onto Proposal Score: 0.7930963890248025
-Proposal Nodes Snapped Onto Ground Truth Score: 0.729156319653255
-Total APLS Score: 0.7597834983047016
