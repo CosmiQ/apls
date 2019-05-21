@@ -41,7 +41,7 @@ def compute_single_sp(G_gt_, G_prop_, kd_idx_dic_prop, kdtree_prop,
     [source_gt, target_gt] = np.random.choice(
         G_gt_.nodes(), size=2, replace=False)
     if verbose:
-        print(("source_gt:", source_gt, "target_gt:", target_gt))
+        print("source_gt:", source_gt, "target_gt:", target_gt)
     # source_gt, target_gt = 10002, 10039
     x_s_gt, y_s_gt = G_gt_.node[source_gt][x_coord], G_gt_.node[source_gt][y_coord]
     x_t_gt, y_t_gt = G_gt_.node[target_gt][x_coord], G_gt_.node[target_gt][y_coord]
@@ -101,9 +101,9 @@ def compute_single_sp(G_gt_, G_prop_, kd_idx_dic_prop, kdtree_prop,
 
     if verbose:
         # print ("source_gt:", source_gt, "target_gt:", target_gt)
-        print(("len_gt:", len_gt))
-        print(("len_prop:", len_prop))
-        print(("perc_diff:", perc_diff))
+        print("len_gt:", len_gt)
+        print("len_prop:", len_prop)
+        print("perc_diff:", perc_diff)
 
     if make_plots:
 

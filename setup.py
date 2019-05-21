@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
-version = '0.0.5.6'
-
 readme = ''
+
+version = '0.1.0'
 
 # Runtime requirements.
 inst_reqs = ['matplotlib>=3.0.0',

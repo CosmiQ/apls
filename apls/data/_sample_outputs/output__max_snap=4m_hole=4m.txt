@@ -1,0 +1,5 @@
+Ground Truth Nodes Snapped Onto Proposal Score: 0.7973714316363272
+Proposal Nodes Snapped Onto Ground Truth Score: 0.6837488820254419
+Total APLS Score: 0.7362019410731921
+TOPO vals - topo_tp_tot, topo_fp_tot, topo_fn_tot, topo_precision, topo_recall, topo_f1: (2054, 959, 1444, 0.6817125788250913, 0.5871926815323042, 0.6309322684687453)
+SP: 0.47

@@ -73,7 +73,7 @@ def project_gdf(gdf, to_crs=None, to_latlong=False):
             # if to_latlong is True, project the gdf to latlong
             latlong_crs = default_crs
             projected_gdf = gdf.to_crs(latlong_crs)
-            print('Projected the GeoDataFrame "{}" to default_crs in {:,.2f} seconds'.format(gdf.gdf_name, time.time()-start_time))
+            # print('Projected the GeoDataFrame "{}" to default_crs in {:,.2f} seconds'.format(gdf.gdf_name, time.time()-start_time))
         else:
             # else, project the gdf to UTM
             # if GeoDataFrame is already in UTM, just return it
@@ -95,7 +95,7 @@ def project_gdf(gdf, to_crs=None, to_latlong=False):
 
             # project the GeoDataFrame to the UTM CRS
             projected_gdf = gdf.to_crs(utm_crs)
-            print('Projected the GeoDataFrame "{}" to UTM-{} in {:,.2f} seconds'.format(gdf.gdf_name, utm_zone, time.time()-start_time))
+            # print('Projected the GeoDataFrame "{}" to UTM-{} in {:,.2f} seconds'.format(gdf.gdf_name, utm_zone, time.time()-start_time))
 
     projected_gdf.gdf_name = gdf.gdf_name
     return projected_gdf
@@ -132,7 +132,7 @@ def project_graph(G, to_crs=None):
     gdf_nodes['lon'] = gdf_nodes['x']
     gdf_nodes['lat'] = gdf_nodes['y']
     gdf_nodes['geometry'] = gdf_nodes.apply(lambda row: Point(row['x'], row['y']), axis=1)
-    print('Created a GeoDataFrame from graph in {:,.2f} seconds'.format(time.time()-start_time))
+    # print('Created a GeoDataFrame from graph in {:,.2f} seconds'.format(time.time()-start_time))
 
     # project the nodes GeoDataFrame to UTM
     gdf_nodes_utm = project_gdf(gdf_nodes, to_crs=to_crs)
@@ -158,7 +158,7 @@ def project_graph(G, to_crs=None):
     gdf_nodes_utm['x'] = gdf_nodes_utm['geometry'].map(lambda point: point.x)
     gdf_nodes_utm['y'] = gdf_nodes_utm['geometry'].map(lambda point: point.y)
     gdf_nodes_utm = gdf_nodes_utm.drop('geometry', axis=1)
-    print('Extracted projected node geometries from GeoDataFrame in {:,.2f} seconds'.format(time.time()-start_time))
+    # print('Extracted projected node geometries from GeoDataFrame in {:,.2f} seconds'.format(time.time()-start_time))
 
     # clear the graph to make it a blank slate for the projected data
     start_time = time.time()
@@ -188,7 +188,7 @@ def project_graph(G, to_crs=None):
     G_proj.graph['name'] = '{}_UTM'.format(graph_name)
     if 'streets_per_node' in G.graph:
         G_proj.graph['streets_per_node'] = G.graph['streets_per_node']
-    print('Rebuilt projected graph in {:,.2f} seconds'.format(time.time()-start_time))
+    # print('Rebuilt projected graph in {:,.2f} seconds'.format(time.time()-start_time))
     return G_proj
 
 
@@ -232,7 +232,7 @@ def graph_to_gdfs(G, nodes=True, edges=True, node_geometry=True,
         gdf_nodes.gdf_name = '{}_nodes'.format(G.graph['name'])
 
         to_return.append(gdf_nodes)
-        print('Created GeoDataFrame "{}" from graph in {:,.2f} seconds'.format(gdf_nodes.gdf_name, time.time()-start_time))
+        # print('Created GeoDataFrame "{}" from graph in {:,.2f} seconds'.format(gdf_nodes.gdf_name, time.time()-start_time))
 
     if edges:
 
@@ -267,7 +267,7 @@ def graph_to_gdfs(G, nodes=True, edges=True, node_geometry=True,
         gdf_edges.gdf_name = '{}_edges'.format(G.graph['name'])
 
         to_return.append(gdf_edges)
-        print('Created GeoDataFrame "{}" from graph in {:,.2f} seconds'.format(gdf_edges.gdf_name, time.time()-start_time))
+        # print('Created GeoDataFrame "{}" from graph in {:,.2f} seconds'.format(gdf_edges.gdf_name, time.time()-start_time))
 
     if len(to_return) > 1:
         return tuple(to_return)
@@ -344,7 +344,7 @@ def plot_graph(G, bbox=None, fig_height=6, fig_width=None, margin=0.02,
     fig, ax : tuple
     """
 
-    print('Begin plotting the graph...')
+    # print('Begin plotting the graph...')
     node_Xs = [float(x) for _, x in G.nodes(data='x')]
     node_Ys = [float(y) for _, y in G.nodes(data='y')]
 
@@ -388,7 +388,7 @@ def plot_graph(G, bbox=None, fig_height=6, fig_width=None, margin=0.02,
     # add the lines to the axis as a linecollection
     lc = LineCollection(lines, colors=edge_color, linewidths=edge_linewidth, alpha=edge_alpha, zorder=2)
     ax.add_collection(lc)
-    print('Drew the graph edges in {:,.2f} seconds'.format(time.time()-start_time))
+    # print('Drew the graph edges in {:,.2f} seconds'.format(time.time()-start_time))
 
     # scatter plot the nodes
     ax.scatter(node_Xs, node_Ys, s=node_size, c=node_color, alpha=node_alpha, edgecolor=node_edgecolor, zorder=node_zorder)
@@ -436,6 +436,47 @@ def plot_graph(G, bbox=None, fig_height=6, fig_width=None, margin=0.02,
     fig, ax = save_and_show(fig, ax, save, show, close, file_format, dpi,
                             axis_off, filename=filename)
     return fig, ax
+
+
+# https://github.com/gboeing/osmnx/blob/master/osmnx/plot.py
+def node_list_to_coordinate_lines(G, node_list, use_geom=True):
+    """
+    Given a list of nodes, return a list of lines that together follow the path
+    defined by the list of nodes.
+    Parameters
+    ----------
+    G : networkx multidigraph
+    route : list
+        the route as a list of nodes
+    use_geom : bool
+        if True, use the spatial geometry attribute of the edges to draw
+        geographically accurate edges, rather than just lines straight from node
+        to node
+    Returns
+    -------
+    lines : list of lines given as pairs ( (x_start, y_start), (x_stop, y_stop) )
+    """
+    edge_nodes = list(zip(node_list[:-1], node_list[1:]))
+    lines = []
+    for u, v in edge_nodes:
+        # if there are parallel edges, select the shortest in length
+        data = min(G.get_edge_data(u, v).values(), key=lambda x: x['length'])
+
+        # if it has a geometry attribute (ie, a list of line segments)
+        if 'geometry' in data and use_geom:
+            # add them to the list of lines to plot
+            xs, ys = data['geometry'].xy
+            lines.append(list(zip(xs, ys)))
+        else:
+            # if it doesn't have a geometry attribute, the edge is a straight
+            # line from node to node
+            x1 = G.nodes[u]['x']
+            y1 = G.nodes[u]['y']
+            x2 = G.nodes[v]['x']
+            y2 = G.nodes[v]['y']
+            line = [(x1, y1), (x2, y2)]
+            lines.append(line)
+    return lines
 
 
 # https://github.com/gboeing/osmnx/blob/master/osmnx/plot.py
@@ -627,13 +668,13 @@ def save_and_show(fig, ax, save, show, close, file_format, dpi, axis_off,
                 extent = 'tight'
             if len(filename) > 0:
                 fig.savefig(path_filename, dpi=dpi, bbox_inches=extent, format=file_format, facecolor=fig.get_facecolor(), transparent=True)
-        print('Saved the figure to disk in {:,.2f} seconds'.format(time.time()-start_time))
+        # print('Saved the figure to disk in {:,.2f} seconds'.format(time.time()-start_time))
 
     # show the figure if specified
     if show:
         start_time = time.time()
         plt.show()
-        print('Showed the plot in {:,.2f} seconds'.format(time.time()-start_time))
+        # print('Showed the plot in {:,.2f} seconds'.format(time.time()-start_time))
     # if show=False, close the figure if close=True to prevent display
     elif close:
         plt.close()

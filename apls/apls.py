@@ -2191,8 +2191,8 @@ def gather_files(test_method, truth_dir, prop_dir,
                 print("gt random edge props for edge:", edge_tmp, " = ",
                       G_gt_init.edges[edge_tmp[0], edge_tmp[1], 0])
 
-            # # optional: save to pickle
-            # outpickle = '/raid/cosmiq/apls/tmp.gpickle'
+            # # # optional: save to pickle
+            # outpickle = 'tmp.gpickle'
             # nx.write_gpickle(G_gt_init, outpickle)
 
             #########
@@ -2691,8 +2691,8 @@ def execute(output_name, gt_list, gp_list, root_list, im_loc_list=[],
         f.write("Proposal Nodes Snapped Onto Ground Truth Score: " +
                 str(C_prop_onto_gt) + "\n")
         f.write("Total APLS Score: " + str(C) + "\n")
-        # f.write("TOPO vals - topo_tp_tot, topo_fp_tot, topo_fn_tot, topo_precision, topo_recall, topo_f1: " + str(topo_vals) + "\n")
-        # f.write("SP: " + str(sp))
+        f.write("TOPO vals - topo_tp_tot, topo_fp_tot, topo_fn_tot, topo_precision, topo_recall, topo_f1: " + str(topo_vals) + "\n")
+        f.write("SP: " + str(sp))
         f.close()
 
         t2 = time.time()
@@ -3053,7 +3053,7 @@ def execute(output_name, gt_list, gp_list, root_list, im_loc_list=[],
                         gt_color=gt_color, prop_color=prop_color,
                         default_node_size=20,
                         title=image_name, adjust=False,
-                        figname=figname, verbose=verbose)
+                        figname=figname, verbose=super_verbose)
 
             #############
             t2 = time.time()
@@ -3118,7 +3118,7 @@ def main():
                         help='Location of prediction wkt file')
     parser.add_argument('--max_snap_dist', default=4, type=int,
                         help='Buffer distance (meters) around graph')
-    parser.add_argument('--topo_hole_size', default=3, type=float,
+    parser.add_argument('--topo_hole_size', default=4, type=float,
                         help='hole size in meters for TOPO metric')
     parser.add_argument('--topo_subgraph_radius', default=150, type=float,
                         help='Subgraph radius for TOPO')
@@ -3128,7 +3128,7 @@ def main():
                         help='Frational length differnence for SP metric')
     parser.add_argument('--linestring_delta', default=200, type=int,
                         help='Distance between midpoints on edges')
-    parser.add_argument('--is_curved_eps', default=-10**3, type=float,
+    parser.add_argument('--is_curved_eps', default=0.12, type=float,
                         help='Line curvature above which midpoints will be'
                         ' injected, (< 0 to inject midpoints on straight'
                         ' lines)')

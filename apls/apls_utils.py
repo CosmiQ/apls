@@ -152,7 +152,7 @@ def _nodes_near_origin(G_, node, kdtree, kd_idx_dic,
 
 
 ###############################################################################
-def G_to_kdtree(G_, x_coord='x', y_coord='y'):
+def G_to_kdtree(G_, x_coord='x', y_coord='y', verbose=False):
     """
     Create kd tree from node positions.
 
@@ -202,7 +202,8 @@ def G_to_kdtree(G_, x_coord='x', y_coord='y'):
 
     # now create kdtree from numpy array
     kdtree = scipy.spatial.KDTree(arr)
-    print("Time to create k-d tree:", time.time() - t1, "seconds")
+    if verbose:
+        print("Time to create k-d tree:", time.time() - t1, "seconds")
     return kd_idx_dic, kdtree, arr
 
 

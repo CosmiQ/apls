@@ -297,7 +297,8 @@ def compute_topo(G_gt_, G_p_, subgraph_radius=150, interval=30, hole_size=5,
 
     for i, origin_node in enumerate(origin_nodes):
 
-        print((i, "Origin node:", origin_node))
+        if (i % 20) == 0:
+            print(i, "Origin node:", origin_node)
         n_props = G_gt_.node[origin_node]
         x0, y0 = n_props[x_coord], n_props[y_coord]
         origin_point = [x0, y0]
@@ -511,11 +512,11 @@ def compute_topo(G_gt_, G_p_, subgraph_radius=150, interval=30, hole_size=5,
         f1 = 0
 
     print("TOPO metric:")
-    print(("  total time elapsed to compute TOPO and make plots:",
-           time.time() - t0, "seconds"))
-    print(("  total precison:", precision))
-    print(("  total recall:", recall))
-    print(("  total f1:", f1))
+    print("  total time elapsed to compute TOPO and make plots:",
+          time.time() - t0, "seconds")
+    print("  total precison:", precision)
+    print("  total recall:", recall)
+    print("  total f1:", f1)
 
     return tp_tot, fp_tot, fn_tot, precision, recall, f1
 
