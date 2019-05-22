@@ -44,14 +44,12 @@ apls.py compares ground truth and proposal graphs.  The actual metric takes up a
 	
 	# 1. Compare a ground truth SpaceNet geojson with a submission csv
 	python apls.py --test_method=gt_json_prop_wkt --output_name=gt_json_prop_wkt \
-		--max_snap_dist=4 --is_curved_eps=0.12 \
 		--truth_dir=data/gt_json_prop_wkt/ground_truth_randomized \
 		--wkt_file=data/gt_json_prop_wkt/proposal/sn3_sample_submission_albu.csv \
 		--im_dir=data/images
 	
 	# 2. Compare a ground truth geojson with a proposal json
 	python apls.py --test_method=gt_json_prop_json --output_name=gt_json_prop_json \
-		--max_snap_dist=4 --is_curved_eps=0.12 \
 		--truth_dir=data/gt_json_prop_json/AOI_2_Vegas_Train/spacenetroads \
 		--prop_dir=data/gt_json_prop_json/AOI_2_Vegas_Train/osm 
 			
@@ -63,7 +61,6 @@ apls.py compares ground truth and proposal graphs.  The actual metric takes up a
 	
 	# 4. Compare a pickled ground truth graph with a pickled proposal graph 
 	python apls.py --test_method=gt_pkl_prop_pkl --output_name=gt_pkl_prop_pkl \
-		--max_snap_dist=4 --is_curved_eps=0.12 \
 		--truth_dir=data/gt_pkl_prop_pkl/ground_truth_randomized \
 		--prop_dir=data/gt_pkl_prop_pkl/proposal \
 		--im_dir=data/images	
