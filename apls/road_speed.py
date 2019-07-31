@@ -5,46 +5,45 @@ Created on Wed Jan 23 19:30:30 2019
 
 @author: avanetten
 
-https://community.topcoder.com/longcontest/?module=ViewProblemStatement&rd=17036&pm=14735
 https://arxiv.org/pdf/1807.01232.pdf
 
 
 Appendix A: The SpaceNet Roads Dataset Labeling Guidelines
-The SpaceNet Roads Dataset labeling guidelines:
+The SpaceNet Roads Dataset labeling guidelines: 
 
 1.	Road vectors must be drawn as a center line within 2m (7 pixels) of observed road
-a.	The centerline of a road is defined as the centerline of the roadway. If a road has an even number of lanes, the centerline shall be drawn on the line separating lanes.  If the road has an odd number of lanes then the centerline should be drawn down the center of the middle lane.
-b.	Divided highways should have two centerlines, a centerline for each direction of traffic.  See below for the definition of a divided highway.
+a.	The centerline of a road is defined as the centerline of the roadway. If a road has an even number of lanes, the centerline shall be drawn on the line separating lanes.  If the road has an odd number of lanes then the centerline should be drawn down the center of the middle lane.  
+b.	Divided highways should have two centerlines, a centerline for each direction of traffic.  See below for the definition of a divided highway. 
 2.	Road vectors must be represented as a connected network to support routing.  Roads that intersect each other should share points as an intersection like instructed through OSM.  Roads that cross each other that are not connected such as while using an overpass should not share a point of connection.
 3.	Roads must not bisect building footprints.
-4.	Sections of a road that are a bridge or overpass must be labeled as a bridge via a Boolean flag.
+4.	Sections of a road that are a bridge or overpass must be labeled as a bridge via a Boolean flag.  
 5.	Divided highways must be represented as two lines with traffic direction indicated when possible.
-6.	 Surface type must be classified as:  paved, unpaved, or unknown.
+6.	 Surface type must be classified as:  paved, unpaved, or unknown. 
 7.	Road will be identified by type: (Motorway, Primary, Secondary, Tertiary, Residential, Unclassified, Cart Track)
-8.	Number of lanes will be listed as number of lanes for each centerline as defined in rule 1.  If road has two lanes in each direction, the number of lanes shall equal 4.  If a road has 3 lanes in one direction and 2 directions in another the total number of lanes shall be 5.
+8.	Number of lanes will be listed as number of lanes for each centerline as defined in rule 1.  If road has two lanes in each direction, the number of lanes shall equal 4.  If a road has 3 lanes in one direction and 2 directions in another the total number of lanes shall be 5.  
 
 
-Definition of Divided Highway:
+Definition of Divided Highway: 
 
-A divided highway is a road that has a median or barrier that physically prevents turns across traffic.
+A divided highway is a road that has a median or barrier that physically prevents turns across traffic.  
 A median can be:
 ●	Concrete
 ●	Asphalt
 ●	Green Space
 ●	Dirt/unpaved road
 A median is not:
-●	Yellow hatched lines on pavement.
+●	Yellow hatched lines on pavement.  
 
 
-Road Type Guidelines:
-All road types were defined using the Open Street Maps taxonomy for key=highway. The below descriptions were taken from the Open Street Maps tagging guidelines for highway and the East Africa Tagging Guidelines.
+Road Type Guidelines: 
+All road types were defined using the Open Street Maps taxonomy for key=highway. The below descriptions were taken from the Open Street Maps tagging guidelines for highway and the East Africa Tagging Guidelines.    
 1.	motorway - A restricted access major divided highway, normally with 2 or more running lanes plus emergency hard shoulder. Access onto a motorway comes exclusively through ramps (controlled access).  Equivalent to the Freeway, Autobahn, etc.
 2.	primary - National roads connect the most important cities/towns in a country. In most countries, these roads will usually be tarmacked and show center markings. (In South Sudan, however, primary roads might also be unpaved.)
 3.	secondary – Secondary roads are the second most important roads in a country's transport system. They typically link medium-sized places. They may be paved but in in some countries they are not.
 4.	tertiary - Tertiary roads are busy through roads that link smaller towns and larger villages. More often than not, these roads will be unpaved. However, this tag should be used only on roads wide enough to allow two cars to pass safely.
 5.	residential - Roads which serve as an access to housing, without function of connecting settlements. Often lined with housing.
 6.	unclassified -The least important through roads in a country's system – i.e. minor roads of a lower classification than tertiary, but which serve a purpose other than access to properties. Often link villages and hamlets. (The word 'unclassified' is a historical artifact of the UK road system and does not mean that the classification is unknown; you can use highway=road for that.)
-7.	Cart track – This is a dirt path that shows vehicle traffic that is less defined than a residential
+7.	Cart track – This is a dirt path that shows vehicle traffic that is less defined than a residential   
 
 Additional information and rules for road identification come from following sources:
 1: http://wiki.openstreetmap.org/wiki/Highway_Tag_Africa
@@ -52,10 +51,10 @@ Additional information and rules for road identification come from following sou
 3: http://wiki.openstreetmap.org/wiki/Key:highway
 
 
-GeoJSON Schema
+GeoJSON Schema 
 Attributes:
 1)	“geometry”: Linestring
-2)	“road_id”: int
+2)	“road_id”: int 
 Identifier Index
 3)	“road_type”: int
 1: Motorway
@@ -81,19 +80,33 @@ etc.
 
 
 # geojson example
-{ "type": "Feature", "properties": { "gid": 15806, "road_id": 24791, "road_type": 5, "paved": 1, "bridge": 2, "one_way": 2, "heading": 0.0, "lane_numbe": 2, "ingest_tim": "2017\/09\/24 20:36:06.436+00", "edit_date": "2017\/09\/24 20:36:06.436+00", "edit_user": "ian_kitchen", "production": "0", "imagery_so": "0", "imagery_da": "0", "partialBuilding": 1.0, "partialDec": 0.0 },
-    "geometry": { "type": "LineString", "coordinates": [ [ -115.305975139809291, 36.179169421086783, 0.0 ], [ -115.305540626738249, 36.179686396492464, 0.0 ], [ -115.305150516462803, 36.180003559318038, 0.0 ], [ -115.304760406187356, 36.18037781145221, 0.0 ], [ -115.304287833577249, 36.180932846396956, 0.0 ], [ -115.304305558679488, 36.18094769983459, 0.0 ] ] } }
+{ "type": "Feature", "properties": { "gid": 15806, "road_id": 24791, "road_type": 5, "paved": 1, "bridge": 2, "one_way": 2, "heading": 0.0, "lane_numbe": 2, "ingest_tim": "2017\/09\/24 20:36:06.436+00", "edit_date": "2017\/09\/24 20:36:06.436+00", "edit_user": "ian_kitchen", "production": "0", "imagery_so": "0", "imagery_da": "0", "partialBuilding": 1.0, "partialDec": 0.0 }, "geometry": { "type": "LineString", "coordinates": [ [ -115.305975139809291, 36.179169421086783, 0.0 ], [ -115.305540626738249, 36.179686396492464, 0.0 ], [ -115.305150516462803, 36.180003559318038, 0.0 ], [ -115.304760406187356, 36.18037781145221, 0.0 ], [ -115.304287833577249, 36.180932846396956, 0.0 ], [ -115.304305558679488, 36.18094769983459, 0.0 ] ] } }
 """
 
 import os
+import sys
 import json
+import math
 import fiona
+import shutil
+import numpy as np
+import geopandas as gpd
 import random
+import skimage
+import argparse
+import cv2
+from json import JSONDecodeError
 random.seed(2018)
+
+# add apls path and import apls_tools
+path_apls_src = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(path_apls_src)
+import osmnx_funcs
+import apls_utils
 
 
 ###############################################################################
-def speed_func(geojson_row):
+def speed_func(geojson_row, osm_labels=False, verbose=True):
     '''
     Infer road speed limit based on SpaceNet properties
     # geojson example
@@ -103,22 +116,102 @@ def speed_func(geojson_row):
             "ingest_tim": "2017\/09\/24 20:36:06.436+00",
             "edit_date": "2017\/09\/24 20:36:06.436+00",
             "edit_user": "ian_kitchen", "production": "0", "imagery_so": "0",
-            "imagery_da": "0", "partialBuilding": 1.0, "partialDec": 0.0 },
-            "geometry": { "type": "LineString", "coordinates": [ [ -115.305975139809291, 36.179169421086783, 0.0 ], [ -115.305540626738249, 36.179686396492464, 0.0 ], [ -115.305150516462803, 36.180003559318038, 0.0 ], [ -115.304760406187356, 36.18037781145221, 0.0 ], [ -115.304287833577249, 36.180932846396956, 0.0 ], [ -115.304305558679488, 36.18094769983459, 0.0 ] ] }
+            "imagery_da": "0", "partialBuilding": 1.0, "partialDec": 0.0 }, 
+            "geometry": { "type": "LineString", "coordinates": [ [ -115.305975139809291, 36.179169421086783, 0.0 ], [ -115.305540626738249, 36.179686396492464, 0.0 ], [ -115.305150516462803, 36.180003559318038, 0.0 ], [ -115.304760406187356, 36.18037781145221, 0.0 ], [ -115.304287833577249, 36.180932846396956, 0.0 ], [ -115.304305558679488, 36.18094769983459, 0.0 ] ] } 
     }
+    if osm_labels, assume an osm label
+    Return speed_final_mph, speed_final_mps
+    Set < 0 if not found
     '''
 
-    road_type = int(geojson_row['properties']['road_type'])
-    # lane number was incorrectly labeled in initial geojsons
-    try:
-        num_lanes = int(geojson_row['properties']['lane_numbe'])
-    except:
-        num_lanes = int(geojson_row['properties']['lane_number'])
-    surface = int(geojson_row['properties']['paved'])
-    try:
-        bridge = int(geojson_row['properties']['bridge'])
-    except:
-        bridge = int(geojson_row['properties']['bridge_type'])
+    keys = set(geojson_row['properties'].keys())
+    # print ("geojson_row:", geojson_row)
+
+    if osm_labels:
+        # https://wiki.openstreetmap.org/wiki/Key:highway
+        # convert road_type_str to int
+        conv_dict = {'motorway': 1,
+                     'motorway_link': 1,
+                     'trunk': 1,
+                     'trunk_link': 1,
+                     'primary': 2,
+                     'primary_link': 2,
+                     'bus_guideway': 2,
+                     'secondary': 3,
+                     'secondary_link': 3,
+                     'tertiary': 4,
+                     'tertiary_link': 4,
+                     'residential': 5,
+                     'living_street': 5,
+                     'unclassified': 6,
+                     'service': 6,
+                     'road': 6,
+                     'cart_track': 7,
+                     'track': 7,
+                     }
+        skip_set = ('stopline', 'footway', 'bridleway', 'step', 'steps', 
+                    'path', 'pedestrian', 'escape', 'cycleway', 'raceway',
+                    'bus', 'services', 'escalator', 'sidewalk')
+
+        if verbose:
+            print("geojson_row", geojson_row)
+
+        if ('highway' in geojson_row['properties']):
+            road_type_str = geojson_row['properties']['highway']
+        elif ('class' in geojson_row['properties']):
+            if geojson_row['properties']['class'] == 'highway':
+                road_type_str = geojson_row['properties']['type']
+            else:
+                if verbose:
+                    print("  class not highway")
+                return -1, -1
+        else:
+            if verbose:
+                print("  not road")
+            return -1, -1
+
+        # check type
+        if road_type_str in skip_set:
+            if verbose:
+                print("road_type {} in skip_set".format(road_type_str))
+            return -1, -1
+        else:
+            if verbose:
+                print("  road_type_str:", road_type_str)
+            road_type = conv_dict[road_type_str.lower()]
+            
+        # check if tunnel
+        if 'tunnel' in keys:
+            if geojson_row['properties']['tunnel'] in ['yes']:
+                print ("  skipping tunnel!", geojson_row)
+                return -1, -1
+
+        num_lanes = 2
+        surface = 1
+        bridge = 2
+
+    # SpaceNet labels
+    else:
+        # sometimes we get a malformed road
+        try:
+            road_type = int(geojson_row['properties']['road_type'])
+            # lane number was incorrectly labeled in initial geojsons
+            if 'lane_numbe' in keys:
+                num_lanes = int(geojson_row['properties']['lane_numbe'])
+            else:
+                num_lanes = int(geojson_row['properties']['lane_number'])
+            surface = int(geojson_row['properties']['paved'])
+            if 'bridge_typ' in keys:
+                bridge = int(geojson_row['properties']['bridge_typ'])
+            else:
+                bridge = int(geojson_row['properties']['bridge_type'])
+        except KeyError:
+            # assume a one lane unclassified paved road
+            road_type = 6
+            num_lanes = 1
+            surface = 1
+            bridge = 2
+            print("malformed geojson row:", geojson_row)
 
     # road type (int)
     '''
@@ -130,35 +223,32 @@ def speed_func(geojson_row):
     6: Unclassified
     7: Cart track
     '''
-    road_type_dict = {
-        1: 60,
-        2: 45,
-        3: 35,
-        4: 25,
-        5: 25,
-        6: 20,
-        7: 15
-    }
 
+    # https://en.wikipedia.org/wiki/File:Speed_limits_in_Ohio.svg
+    # https://wiki.openstreetmap.org/wiki/OSM_tags_for_routing/Maxspeed#United_States_of_America    
+    #   Use Oregon:
+    #       State	Motorway	Trunk	Primary	Secondary	Tertiary	Unclassified	Residential	Living street	Service
+    #       Oregon	55 mph	55 mph	55 mph	35 mph	30 mph		         25 mph		              15 mph
     # feed in [road_type][num_lanes]
     nested_speed_dict = {
-        1: {1: 45, 2: 50, 3: 55, 4: 65, 5: 65, 6: 65, 7: 65, 8: 65},
-        2: {1: 35, 2: 40, 3: 45, 4: 45, 5: 45, 6: 45, 7: 45, 8: 45},
-        3: {1: 30, 2: 30, 3: 30, 4: 30, 5: 30, 6: 30, 7: 30, 8: 30},
-        4: {1: 25, 2: 25, 3: 25, 4: 25, 5: 25, 6: 25, 7: 25, 8: 25},
-        5: {1: 25, 2: 25, 3: 25, 4: 25, 5: 25, 6: 25, 7: 25, 8: 25},
-        6: {1: 20, 2: 20, 3: 20, 4: 20, 5: 20, 6: 20, 7: 20, 8: 20},
-        7: {1: 15, 2: 15, 3: 15, 4: 15, 5: 15, 6: 15, 7: 15, 8: 15},
+        1: {1: 55, 2: 55, 3: 65, 4: 65, 5: 65, 6: 65, 7: 65, 8: 65, 9: 65, 10: 65, 11: 65, 12: 65},
+        2: {1: 45, 2: 45, 3: 55, 4: 55, 5: 55, 6: 55, 7: 55, 8: 55, 9: 55, 10: 55, 11: 55, 12: 55},
+        3: {1: 35, 2: 35, 3: 45, 4: 45, 5: 45, 6: 45, 7: 45, 8: 45, 9: 45, 10: 45, 11: 45, 12: 45},
+        4: {1: 30, 2: 30, 3: 35, 4: 35, 5: 35, 6: 35, 7: 35, 8: 35, 9: 35, 10: 35, 11: 35, 12: 35},
+        5: {1: 25, 2: 25, 3: 30, 4: 30, 5: 30, 6: 30, 7: 30, 8: 30, 9: 30, 10: 30, 11: 30, 12: 30},
+        6: {1: 20, 2: 20, 3: 20, 4: 20, 5: 20, 6: 20, 7: 20, 8: 20, 9: 20, 10: 20, 11: 20, 12: 20},
+        7: {1: 20, 2: 20, 3: 20, 4: 20, 5: 20, 6: 20, 7: 20, 8: 20, 9: 20, 10: 20, 11: 20, 12: 20}
     }
 
     # multiply speed by this factor based on surface
     road_surface_dict = {
         1: 1,
-        2: 0.5
+        2: 0.75
     }
 
+    # multiply speed by this factor for bridges
     bridge_dict = {
-        1: 0.8,
+        1: 1,  # 0.8,
         2: 1}
 
     # default speed in miles per hour
@@ -173,6 +263,26 @@ def speed_func(geojson_row):
 
 
 ###############################################################################
+def speed_to_burn_val(speed, min_speed=15, max_speed=65.,
+                      min_road_burn_val=127,
+                      mask_max=255):
+    '''Convert speed estimate to mask burn value between 0 and 255'''
+
+    bw = mask_max - min_road_burn_val
+    burn_val = min_road_burn_val + bw \
+        * ((speed - min_speed) / (max_speed - min_speed))
+    return max(burn_val, min_road_burn_val)
+
+
+###############################################################################
+def speed_to_bins_bg(speed_mph, bin_size_mph=10.0, channel_value_mult=1.):
+    '''Convert speed estimate to appropriate channel
+    bin = 0 if speed = 0'''
+
+    return int(int(math.ceil(speed_mph / bin_size_mph)) * channel_value_mult)
+
+
+###############################################################################
 def update_feature_name(geojson_row, name_bad, name_good):
     # optional: also update "ingest_tim" tag
     if name_bad in geojson_row['properties'].keys():
@@ -183,17 +293,27 @@ def update_feature_name(geojson_row, name_bad, name_good):
 
 
 ###############################################################################
-def add_speed_to_geojson(geojson_path_in, geojson_path_out,
-                         randomize_coords=False,
+def add_speed_to_geojson(geojson_path_in, geojson_path_out, osm_labels=False,
+                         speed_key_mph='inferred_speed_mph',
+                         speed_key_mps='inferred_speed_mps',
                          verbose=True):
     '''Update geojson data to add inferred speed information'''
 
+    speed_mph_set = set()
+    speed_mph_arr = []
+    bad_row_idxs = []
     with open(geojson_path_in, 'r+') as f:
-        geojson_data = json.load(f)
+        try:
+            geojson_data = json.load(f)
+        except JSONDecodeError:
+            # assume empty array, copy
+            shutil.copy(geojson_path_in, geojson_path_out)
+            return [], set()
 
+        init_len = len(geojson_data['features'])
         for i, geojson_row in enumerate(geojson_data['features']):
-            if verbose:
-                print("\ngeojson_row:", geojson_row)
+            if verbose and (i % 100) == 0:
+                print("\n", i, "/", init_len, "eojson_row:", geojson_row)
 
             # optional: also update "ingest_tim" tag
             if 'ingest_tim' in geojson_row['properties'].keys():
@@ -214,114 +334,169 @@ def add_speed_to_geojson(geojson_path_in, geojson_path_out,
                 geojson_row['properties']['lane_number'] = x_tmp
 
             # infer route speed limit
-            speed_mph, speed_mps = speed_func(geojson_row)
+            speed_mph, speed_mps = speed_func(geojson_row, 
+                                              osm_labels=osm_labels,
+                                              verbose=verbose)
             if verbose:
                 print("  speed_mph, speed_mps:", speed_mph, speed_mps)
-            # update properties
-            geojson_row['properties']['speed_mph'] = speed_mph
-            geojson_row['properties']['speed_m/s'] = speed_mps
+            if speed_mph >= 0:
+                # update properties
+                geojson_row['properties'][speed_key_mph] = speed_mph
+                geojson_row['properties'][speed_key_mps] = speed_mps
+                speed_mph_set.add(speed_mph)
+                speed_mph_arr.append(speed_mph)
+            else:
+                if verbose:
+                    print("geojson_row:", geojson_row)
+                bad_row_idxs.append(i)
 
-            if randomize_coords:
-                rand_mag = 3.14*10**(-5)
-                coords = geojson_row['geometry']['coordinates']
-                print("coords:", coords)
-                for jtmp in range(0, len(coords)):
-                    # add random value to coords
-                    coords[jtmp][0] +=  -1.0*rand_mag/2 + rand_mag * random.random()
-                    coords[jtmp][1] +=  -1.0*rand_mag/2 + rand_mag * random.random()
-                print("coords:", coords)
-                geojson_row['geometry']['coordinates'] = coords
+    # remove bad idxs
+    if len(bad_row_idxs) > 0:
+        # geojson_data['features'] = [e+'\n' for i, e in
+        geojson_data['features'] = [e+'\n' for i, e in
+                enumerate(geojson_data['features']) if i not in bad_row_idxs]
+        final_len = len(geojson_data['features'])
+        # print("  bad_row_idxs:", bad_row_idxs)
+        if 2 > 1: #verbose:
+            print("  init_len:", init_len, "final_len:", final_len)
 
     # save file
     with open(geojson_path_out, 'w') as f:
-        f.write(json.dumps(geojson_data))
+        f.write(json.dumps(geojson_data, indent=2))
 
-#    # older version that doesn't print correctly
-#    geojson_data = fiona.open(geojson_path, 'r')
-#    out = []
-#    for i,geojson_row in enumerate(geojson_data):
-#        if verbose:
-#            print ("\ngeojson_row:", geojson_row)
-#        # infer route speed limit
-#        speed_mph, speed_mps = speed_func(geojson_row)
-#        if verbose:
-#            print ("  speed_mph, speed_mps:", speed_mph, speed_mps)
-#        # update properties
-#        geojson_row['properties']['speed_mph'] = speed_mph
-#        geojson_row['properties']['speed_m/s'] = speed_mps
-#        #out.append(geojson_row) 
-#    # save file
-#    with open(geojson_path_out, 'w') as f:
-#        json.dump(out, f, ensure_ascii=False)
+    return speed_mph_arr, speed_mph_set
+
+
+###############################################################################
+def update_geojson_dir_speed(geojson_dir_in, geojson_dir_out, 
+                             osm_labels=False, nmax=1000000,
+                             verbose=True, super_verbose=False):
+    '''Update geojson data to add inferred speed information for entire
+    directory'''
+
+    os.makedirs(geojson_dir_out, exist_ok=True)
+    speed_mph_set = set()
+    speed_mph_arr = []
+
+    json_files = np.sort([j for j in os.listdir(geojson_dir_in) if j.endswith('.geojson')])
+    if super_verbose:
+        print("json_files:", json_files)
+
+    for i, json_file in enumerate(json_files):
+        if i >= nmax:
+            break
+        if (i % 100) == 0:  # verbose:
+            print(i, "/", len(json_files), json_file)
+        geojson_path_in = os.path.join(geojson_dir_in, json_file)
+        geojson_path_out = os.path.join(geojson_dir_out, json_file)
+        sarr, sset = add_speed_to_geojson(geojson_path_in, geojson_path_out,
+                                          osm_labels=osm_labels,
+                                          verbose=verbose)
+        speed_mph_arr.extend(sarr)
+        speed_mph_set = speed_mph_set.union(sset)
+
+    print("speed_mph_set:", sorted(list(speed_mph_set)))
+    unique, counts = np.unique(speed_mph_arr, return_counts=True)
+    print("speed_mph counts:")
+    d = dict(zip(unique, counts))
+    for k, v in d.items():
+        print(" ", k, v)
 
     return
 
 
 ###############################################################################
-def update_geojson_dir(geosjon_dir_in, geojson_dir_out, 
-                       randomize_coords=False, verbose=True):
-    '''Update geojson data to add inferred speed information for entire
-    directory'''
+def create_speed_gdf(image_path, geojson_path, mask_path_out_gray,
+                     bin_conversion_func, mask_burn_val_key='burnValue',
+                     bufferDistanceMeters=2, bufferRoundness=1,
+                     dissolve_by='speed_m/s', bin_conversion_key='speed_mph',
+                     # crs={'init': 'epsg:4326'},
+                     zero_frac_thresh=0.05,
+                     verbose=False):
 
-    os.makedirs(geojson_dir_out, exist_ok=True)
+    '''Create buffer around geojson for speeds, use bin_conversion_func to
+    assign values to the mask'''
 
-    json_files = [j for j in os.listdir(geojson_dir_in) if j.endswith('.geojson')]
+    # get gdf_buffer
+    try:
+        inGDF = gpd.read_file(geojson_path)
+    except:
+        print("Can't read geosjson:", geojson_path)
+        # create emty mask
+        h, w = cv2.imread(image_path, 0).shape[:2]
+        mask_gray = np.zeros((h, w)).astype(np.uint8)
+        skimage.io.imsave(mask_path_out_gray, mask_gray)
+        # cv2.imwrite(mask_path_out, mask_gray)
+        return []
+
+    if len(inGDF) == 0:
+        print("Empty mask for path:", geojson_path)
+        # create emty mask
+        h, w = cv2.imread(image_path, 0).shape[:2]
+        mask_gray = np.zeros((h, w)).astype(np.uint8)
+        skimage.io.imsave(mask_path_out_gray, mask_gray)
+        # cv2.imwrite(mask_path_out, mask_gray)
+        return []
+        
+    # project
+    projGDF = osmnx_funcs.project_gdf(inGDF) #, to_crs=crs)
     if verbose:
-        print("json_files:", json_files)
+        print("inGDF.columns:", inGDF.columns)
 
-    for i, json_file in enumerate(json_files):
-        if verbose:
-            print(i, "/", len(json_files), json_file)
-        geojson_path_in = os.path.join(geojson_dir_in, json_file)
-        geojson_path_out = os.path.join(geojson_dir_out, json_file)
-        add_speed_to_geojson(geojson_path_in, geojson_path_out,
-                             randomize_coords=randomize_coords,
-                             verbose=verbose)
+    gdf_utm_buffer = projGDF.copy()
+    # perform Buffer to produce polygons from Line Segments
+    gdf_utm_buffer['geometry'] = gdf_utm_buffer.buffer(bufferDistanceMeters,
+                                                       bufferRoundness)
+    gdf_utm_dissolve = gdf_utm_buffer.dissolve(by=dissolve_by)
+    gdf_utm_dissolve.crs = gdf_utm_buffer.crs
+    gdf_buffer = gdf_utm_dissolve.to_crs(inGDF.crs)
+    if verbose:
+        print("gdf_buffer['geometry'].values[0]:",
+              gdf_buffer['geometry'].values[0])
 
-    return
+    # set burn values
+    speed_arr = gdf_buffer[bin_conversion_key].values
+    burnVals = [bin_conversion_func(s) for s in speed_arr]
+    gdf_buffer[mask_burn_val_key] = burnVals
+
+    # create mask
+    apls_utils.gdf_to_array(gdf_buffer, image_path, mask_path_out_gray,
+                            mask_burn_val_key=mask_burn_val_key,
+                            verbose=verbose)
+
+    # check to ensure no mask outside the image pixels (some images are
+    # largely black)
+    im_bgr = cv2.imread(image_path, 1)
+    im_gray = np.sum(im_bgr, axis=2)
+    # check if im_gray is more than X percent black
+    zero_frac = 1. - float(np.count_nonzero(im_gray)) / im_gray.size
+    if zero_frac >= zero_frac_thresh:
+        print("zero_frac:", zero_frac)
+        print("create_speed_gdf(): checking to ensure masks are null where "
+              "image is null")
+        # ensure the label doesn't extend beyond the image
+        mask_gray = cv2.imread(mask_path_out_gray, 0)
+        zero_locs = np.where(im_gray == 0)
+        # set mask_gray to zero at location of zero_locs
+        mask_gray[zero_locs] = 0
+        # overwrite
+        cv2.imwrite(mask_path_out_gray, mask_gray)
+
+    return gdf_buffer
 
 
 ###############################################################################
 if __name__ == "__main__":
 
-    # Example
-    randomize_coords = True
-    geojson_dir_in = '/raid/cosmiq/apls/sample_data/gt_json_prop_pkl/ground_truth'
-    geojson_dir_out = '/raid/cosmiq/apls/sample_data/gt_json_prop_pkl/ground_truth_randomized'
-#    randomize_coords = False
-#    geojson_dir_in = '/raid/cosmiq/spacenet/data/spacenetv2/spacenetLabels/AOI_2_Vegas/400m/'
-#    geojson_dir_out = '/raid/cosmiq/spacenet/data/spacenetv2/spacenetLabels/AOI_2_Vegas/400m_noveau/'
-    run_single = False
-    run_dir = True
-    verbose = True
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--geojson_dir_in', default='', type=str,
+                        help='Input directory of geojsons')
+    parser.add_argument('--geojson_dir_out', default='', type=str,
+                        help='Output directory of updated geojsons')
+    parser.add_argument('--use_osm_labels', default=False, type=bool,
+                        help='if True, labels are from OSM')
+    args = parser.parse_args()
 
-    # single example
-    if run_single:
-        json_file = 'spacenetroads_AOI_2_Vegas_img16.geojson'
-        os.makedirs(geojson_dir_out, exist_ok=True)
-        geojson_path_in = os.path.join(geojson_dir_in, json_file)
-        geojson_path_out = os.path.join(geojson_dir_out, json_file)
-
-        with open(geojson_path_in, 'r+') as f:
-            json_data = json.load(f)
-        json_data['features']
-
-        source = fiona.open(geojson_path_in, 'r')
-        for i, geojson_row in enumerate(source):
-            print("\ngeojson_row:", geojson_row)
-            speed_mph, speed_mps = speed_func(geojson_row)
-            print("  speed_mph, speed_mps:", speed_mph, speed_mps)
-
-            # update properties?
-            geojson_row['properties']['speed_mph'] = speed_mph
-            geojson_row['properties']['speed_m/s'] = speed_mps
-            # source[i] = geojson_row
-
-        # create new geojson
-        add_speed_to_geojson(geojson_path_in, geojson_path_out,
-                             randomize_coords=randomize_coords)
-
-    # full directory
-    if run_dir:
-        update_geojson_dir(geojson_dir_in, geojson_dir_out,
-                           randomize_coords=randomize_coords, verbose=verbose)
+    update_geojson_dir_speed(args.geojson_dir_in, args.geojson_dir_out,
+                             osm_labels=args.use_osm_labels,
+                             verbose=True)
