@@ -37,7 +37,8 @@ import matplotlib.pyplot as plt
 
 
 ###############################################################################
-def wkt_list_to_nodes_edges(wkt_list, node_iter=0, edge_iter=0):
+def wkt_list_to_nodes_edges(wkt_list, weight_list=[],
+                            node_iter=0, edge_iter=0):
     '''Convert wkt list to nodes and edges
     Make an edge between each node in linestring. Since one linestring
     may contain multiple edges, this is the safest approach'''
@@ -48,7 +49,10 @@ def wkt_list_to_nodes_edges(wkt_list, node_iter=0, edge_iter=0):
     edge_loc_set = set()    # set of edge locations
     edge_dic = {}           # edge properties
 
+    if len(weight_list) == 0:
+        weight_list = np.zeros(len(wkt_list))
     for i, lstring in enumerate(wkt_list):
+        weight = weight_list[i]
         # get lstring properties
         shape = shapely.wkt.loads(lstring)
         xs, ys = shape.coords.xy
@@ -89,8 +93,10 @@ def wkt_list_to_nodes_edges(wkt_list, node_iter=0, edge_iter=0):
                 edge_loc_rev = (prev_loc, loc)
                 # shouldn't be duplicate edges, so break if we see one
                 if (edge_loc in edge_loc_set) or (edge_loc_rev in edge_loc_set):
-                    print("Oops, edge already seen, returning:", edge_loc)
-                    return
+                    # print("Oops, edge already seen, returning:", edge_loc)
+                    # return
+                    print("Oops, edge already seen, skipping:", edge_loc)
+                    continue
 
                 # get distance to prev_loc and current loc
                 proj_prev = shape.project(Point(prev_loc))
@@ -109,8 +115,9 @@ def wkt_list_to_nodes_edges(wkt_list, node_iter=0, edge_iter=0):
                               'length_pix': edge_length,
                               'wkt_pix': line_out_wkt,
                               'geometry_pix': line_out,
-                              'osmid': i}
-                #print ("edge_props", edge_props)
+                              'osmid': i,
+                              'weight': weight}
+                # print ("edge_props", edge_props)
 
                 edge_loc_set.add(edge_loc)
                 edge_dic[edge_iter] = edge_props
@@ -269,7 +276,7 @@ def get_edge_geo_coords(G, im_file, remove_pix_geom=True,
 
 
 ###############################################################################
-def wkt_to_G(wkt_list, im_file=None,
+def wkt_to_G(wkt_list, weight_list=[], im_file=None,
              prop_subgraph_filter_weight='length_pix',
              min_subgraph_length=10,
              node_iter=0, edge_iter=0,
@@ -279,6 +286,7 @@ def wkt_to_G(wkt_list, im_file=None,
     t0 = time.time()
     print("Running wkt_list_to_nodes_edges()...")
     node_loc_dic, edge_dic = wkt_list_to_nodes_edges(wkt_list,
+                                                     weight_list=weight_list,
                                                      node_iter=node_iter,
                                                      edge_iter=edge_iter)
     t1 = time.time()
