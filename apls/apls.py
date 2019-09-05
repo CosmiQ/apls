@@ -55,8 +55,8 @@ import sp_metric
 
 
 ###############################################################################
-def add_travel_time(G_, speed_key='speed_m/s', length_key='length',
-                    travel_time_key='travel_time', default_speed=13.41,
+def add_travel_time(G_, speed_key='inferred_speed_mps', length_key='length',
+                    travel_time_key='travel_time_s', default_speed=13.41,
                     verbose=False):
     """
     Compute and add travel time estimaes to each graph edge.
@@ -68,13 +68,13 @@ def add_travel_time(G_, speed_key='speed_m/s', length_key='length',
         properties that includes speed.
     speed_key : str
         Key in the edge properties dictionary to use for the edge speed.
-        Defaults to ``'speed_m/s'``.
+        Defaults to ``'inferred_speed_mps'``.
     length_key : str
         Key in the edge properties dictionary to use for the edge length.
         Defaults to ``'length'`` (asumed to be in meters).
     travel_time_key : str
         Name to assign travel time in the edge properties dictionary.
-        Defaults to ``'travel_time'``.
+        Defaults to ``'travel_time_s'``.
     default_speed : float
         Default speed to use if speed_key is not found in edge properties
         Defaults to ``13.41`` (this is in m/s, and corresponds to 30 mph).
@@ -90,10 +90,15 @@ def add_travel_time(G_, speed_key='speed_m/s', length_key='length',
     for i, (u, v, data) in enumerate(G_.edges(data=True)):
         if speed_key in data:
             speed = data[speed_key]
+            if type(speed) == list:
+                speed = np.mean(speed)
+            # print("speed:", speed)
         else:
-            data['inferred_speed'] = default_speed
-            data[speed_key] = default_speed
-            speed = default_speed
+            print("speed_key not found:", speed_key)
+            return
+#            data['inferred_speed'] = default_speed
+#            data[speed_key] = default_speed
+#            speed = default_speed
         if verbose:
             print("data[length_key]:", data[length_key])
             print("speed:", speed)
@@ -964,8 +969,8 @@ def _create_gt_graph(geoJson, im_test_file, network_type='all_private',
                      # weight='length',
                      subgraph_filter_weight='length',
                      min_subgraph_length=5,
-                     travel_time_key='travel_time',
-                     speed_key='speed_m/s',
+                     travel_time_key='travel_time_s',
+                     speed_key='inferred_speed_mps',
                      use_pix_coords=False,
                      verbose=False,
                      super_verbose=False):
@@ -1120,7 +1125,7 @@ def _create_gt_graph(geoJson, im_test_file, network_type='all_private',
 #            attr_dict['length_pix'] = np.sum([attr_dict['length_pix']])
 #
 #        # check if simplify created various speeds on an edge
-#        speed_keys = ['speed_mph', 'speed_m/s']
+#        speed_keys = ['speed_mph', 'inferred_speed_mps']
 #        for sk in speed_keys:
 #            if sk not in attr_dict.keys():
 #                continue
@@ -1144,8 +1149,8 @@ def _create_gt_graph(geoJson, im_test_file, network_type='all_private',
 def _refine_gt_graph(G0gt_init, im_test_file, 
                      subgraph_filter_weight='length',
                      min_subgraph_length=5,
-                     travel_time_key='travel_time',
-                     speed_key='speed_m/s',
+                     travel_time_key='travel_time_s',
+                     speed_key='inferred_speed_mps',
                      use_pix_coords=False,
                      verbose=False,
                      super_verbose=False):
@@ -1283,7 +1288,7 @@ def _refine_gt_graph(G0gt_init, im_test_file,
             attr_dict['length_pix'] = np.sum([attr_dict['length_pix']])
 
         # check if simplify created various speeds on an edge
-        speed_keys = ['speed_mph', 'speed_m/s']
+        speed_keys = [speed_key, 'inferred_speed_mph', 'inferred_speed_mps']
         for sk in speed_keys:
             if sk not in attr_dict.keys():
                 continue
@@ -1304,10 +1309,10 @@ def _refine_gt_graph(G0gt_init, im_test_file,
 
 
 ###############################################################################
-def make_graphs(G_gt, G_p,
+def make_graphs(G_gt_, G_p_,
                 weight='length',
-                speed_key='speed_m/s',
-                travel_time_key='travel_time',
+                speed_key='inferred_speed_mps',
+                travel_time_key='travel_time_s',
                 max_nodes_for_midpoints=500,
                 linestring_delta=50,
                 is_curved_eps=0.012,
@@ -1325,19 +1330,19 @@ def make_graphs(G_gt, G_p,
 
     Arguments
     ---------
-    G_gt : networkx graph
+    G_gt_ : networkx graph
         Ground truth graph.
-    G_p : networkd graph
+    G_p_ : networkd graph
         Proposal graph over the same region.
     weight : str
         Key in the edge properties dictionary to use for the path length
         weight.  Defaults to ``'length'``.
     speed_key : str
         Key in the edge properties dictionary to use for the edge speed.
-        Defaults to ``'speed_m/s'``.
+        Defaults to ``'inferred_speed_mps'``.
     travel_time_key : str
         Name to assign travel time in the edge properties dictionary.
-        Defaults to ``'travel_time'``.
+        Defaults to ``'travel_time_s'``.
     max_nodes_for_midpoints : int
         Maximum number of gt nodes to inject midpoints.  If there are more
         gt nodes than this, skip midpoints and use this number of points
@@ -1382,8 +1387,17 @@ def make_graphs(G_gt, G_p,
     t0 = time.time()
     print("Executing make_graphs()...")
 
+    print("Ensure", weight, "in gt graph prpperties")
+    print("type(G_gt_)", type(G_gt_))
+    for i, (u, v, data) in enumerate(G_gt_.edges(keys=False, data=True)):
+        # print("G_gt_.edges[u, v]:", G_gt_.edges[u, v])
+        # print("G_gt_.edges[u, v][weight]:", G_gt_.edges[u, v][weight])
+        if weight not in data.keys():
+            print("Error!", weight, "not in G_gt_ edge u, v, data:", u, v, data)
+            return
+
     print("Ensure G_gt 'geometry' is a shapely geometry, not a linestring...")
-    for i, (u, v, key, data) in enumerate(G_gt.edges(keys=True, data=True)):
+    for i, (u, v, key, data) in enumerate(G_gt_.edges(keys=True, data=True)):
         if i == 0:
             print(("u,v,key,data:", u, v, key, data))
             print(("  type data['geometry']:", type(data['geometry'])))
@@ -1395,9 +1409,9 @@ def make_graphs(G_gt, G_p,
             data['geometry'] = shapely.wkt.loads(line)
 
     # create graph with midpoints
-    G_gt0 = create_edge_linestrings(G_gt.to_undirected())
+    G_gt0 = create_edge_linestrings(G_gt_.to_undirected())
     # create graph with linestrings?
-    G_gt_cp = G_gt.to_undirected()
+    # G_gt_cp = G_gt.to_undirected()
     # G_gt_cp = create_edge_linestrings(G_gt.to_undirected())
 
     if verbose:
@@ -1406,14 +1420,14 @@ def make_graphs(G_gt, G_p,
 
     if verbose:
         print("Creating gt midpoints")
-    G_gt_cp, xms, yms = create_graph_midpoints(
+    G_gt_cp0, xms, yms = create_graph_midpoints(
         G_gt0.copy(),
         linestring_delta=linestring_delta,
         figsize=(0, 0),
         is_curved_eps=is_curved_eps,
         verbose=False)
     # add travel time
-    G_gt_cp = add_travel_time(G_gt_cp.copy(),
+    G_gt_cp = add_travel_time(G_gt_cp0.copy(),
                               speed_key=speed_key,
                               travel_time_key=travel_time_key)
 
@@ -1429,13 +1443,24 @@ def make_graphs(G_gt, G_p,
     if verbose:
         print("Get ground truth paths...")
     all_pairs_lengths_gt_native = dict(
-        nx.all_pairs_dijkstra_path_length(G_gt_cp, weight=weight))
+        nx.shortest_path_length(G_gt_cp, weight=weight))
+    # all_pairs_lengths_gt_native = dict(
+    #    nx.all_pairs_dijkstra_path_length(G_gt_cp, weight=weight))
     ###############
 
     ###############
+    # Proposal
+
+    print("Ensure", weight, "in prop graph prpperties")
+    print("type(G_p_)", type(G_p_))
+    for i, (u, v, data) in enumerate(G_p_.edges(keys=False, data=True)):
+        if weight not in data.keys():
+            print("Error!", weight, "not in G_p_ edge u, v, data:", u, v, data)
+            return
+
     # get proposal graph with native midpoints
     print("Ensure G_p 'geometry' is a shapely geometry, not a linestring...")
-    for i, (u, v, key, data) in enumerate(G_p.edges(keys=True, data=True)):
+    for i, (u, v, key, data) in enumerate(G_p_.edges(keys=True, data=True)):
         if i == 0:
             print(("u,v,key,data:", u, v, key, data))
             print(("  type data['geometry']:", type(data['geometry'])))
@@ -1446,9 +1471,9 @@ def make_graphs(G_gt, G_p,
         if type(line) == str:  # or type(line) == unicode:
             data['geometry'] = shapely.wkt.loads(line)
 
-    G_p = create_edge_linestrings(G_p.to_undirected())
+    G_p0 = create_edge_linestrings(G_p_.to_undirected())
     # add travel time
-    G_p = add_travel_time(G_p.copy(),
+    G_p = add_travel_time(G_p0.copy(),
                           speed_key=speed_key,
                           travel_time_key=travel_time_key)
 
@@ -1458,14 +1483,14 @@ def make_graphs(G_gt, G_p,
 
     if verbose:
         print("Creating proposal midpoints")
-    G_p_cp, xms_p, yms_p = create_graph_midpoints(
+    G_p_cp0, xms_p, yms_p = create_graph_midpoints(
         G_p.copy(),
         linestring_delta=linestring_delta,
         figsize=(0, 0),
         is_curved_eps=is_curved_eps,
         verbose=False)
     # add travel time
-    G_p_cp = add_travel_time(G_p_cp.copy(),
+    G_p_cp = add_travel_time(G_p_cp0.copy(),
                              speed_key=speed_key,
                              travel_time_key=travel_time_key)
     if verbose:
@@ -1482,7 +1507,8 @@ def make_graphs(G_gt, G_p,
 
     # get paths
     all_pairs_lengths_prop_native = dict(
-        nx.all_pairs_dijkstra_path_length(G_p_cp, weight=weight))
+        nx.shortest_path_length(G_p_cp, weight=weight))
+        # nx.all_pairs_dijkstra_path_length(G_p_cp, weight=weight))
 
     ###############
     # insert gt control points into proposal
@@ -1490,13 +1516,13 @@ def make_graphs(G_gt, G_p,
         print("Inserting", len(control_points_gt),
               "control points into G_p...")
         print("G_p.nodes():", G_p.nodes())
-    G_p_cp_prime, xn_p, yn_p = insert_control_points(
+    G_p_cp_prime0, xn_p, yn_p = insert_control_points(
         G_p.copy(), control_points_gt,
         max_distance_meters=max_snap_dist,
         allow_renaming=allow_renaming,
         verbose=super_verbose)
     # add travel time
-    G_p_cp_prime = add_travel_time(G_p_cp_prime.copy(),
+    G_p_cp_prime = add_travel_time(G_p_cp_prime0.copy(),
                                    speed_key=speed_key,
                                    travel_time_key=travel_time_key)
 #    G_p_cp, xn_p, yn_p = insert_control_points(G_p_cp, control_points_gt,
@@ -1510,23 +1536,25 @@ def make_graphs(G_gt, G_p,
         print("\nInserting", len(control_points_prop),
               "control points into G_gt...")
     # permit renaming of inserted nodes if coincident with existing node
-    G_gt_cp_prime, xn_gt, yn_gt = insert_control_points(
-        G_gt,
+    G_gt_cp_prime0, xn_gt, yn_gt = insert_control_points(
+        G_gt_,
         control_points_prop,
         max_distance_meters=max_snap_dist,
         allow_renaming=allow_renaming,
         verbose=super_verbose)
     # add travel time
-    G_gt_cp_prime = add_travel_time(G_gt_cp_prime.copy(),
+    G_gt_cp_prime = add_travel_time(G_gt_cp_prime0.copy(),
                                     speed_key=speed_key,
                                     travel_time_key=travel_time_key)
 
     ###############
     # get paths
     all_pairs_lengths_gt_prime = dict(
-        nx.all_pairs_dijkstra_path_length(G_gt_cp_prime, weight=weight))
+        nx.shortest_path_length(G_gt_cp_prime, weight=weight))
+        # nx.all_pairs_dijkstra_path_length(G_gt_cp_prime, weight=weight))
     all_pairs_lengths_prop_prime = dict(
-        nx.all_pairs_dijkstra_path_length(G_p_cp_prime, weight=weight))
+        nx.shortest_path_length(G_p_cp_prime, weight=weight))
+        # nx.all_pairs_dijkstra_path_length(G_p_cp_prime, weight=weight))
 
     tf = time.time()
     print("Time to run make_graphs in apls.py:", tf - t0, "seconds")
@@ -1540,8 +1568,8 @@ def make_graphs(G_gt, G_p,
 ###############################################################################
 def make_graphs_yuge(G_gt, G_p,
                      weight='length',
-                     speed_key='speed_m/s',
-                     travel_time_key='travel_time',
+                     speed_key='inferred_speed_mps',
+                     travel_time_key='travel_time_s',
                      max_nodes=500,
                      max_snap_dist=4,
                      allow_renaming=True,
@@ -1566,10 +1594,10 @@ def make_graphs_yuge(G_gt, G_p,
         weight.  Defaults to ``'length'``.
     speed_key : str
         Key in the edge properties dictionary to use for the edge speed.
-        Defaults to ``'speed_m/s'``.
+        Defaults to ``'inferred_speed_mps'``.
     travel_time_key : str
         Name to assign travel time in the edge properties dictionary.
-        Defaults to ``'travel_time'``.
+        Defaults to ``'travel_time_s'``.
     max_nodess : int
         Maximum number of gt nodes to inject midpoints.  If there are more
         gt nodes than this, skip midpoints and use this number of points
@@ -2216,8 +2244,8 @@ def gather_files(test_method, truth_dir, prop_dir,
                  prop_subgraph_filter_weight='length_pix',
                  prop_min_subgraph_length=10,
                  use_pix_coords=True,
-                 speed_key='speed_m/s',
-                 travel_time_key='travel_time',
+                 speed_key='inferred_speed_mps',
+                 travel_time_key='travel_time_s',
                  wkt_weight_key='travel_time_s',
                  default_speed=13.41,
                  verbose=False, super_verbose=False):
@@ -2263,9 +2291,9 @@ def gather_files(test_method, truth_dir, prop_dir,
     use_pix_coords : boolean
         Switch to use pixel coords for calculations. Defaults to ``True``.
     speed_key : str
-        Edge key for speed. Defaults to ``'speed_m/s'``.
+        Edge key for speed. Defaults to ``'inferred_speed_mps'``.
     travel_time_key : str
-        Edge key for travel time. Defaults to ``'travel_time'``.
+        Edge key for travel time. Defaults to ``'travel_time_s'``.
     default_speed : float
         Default speed for edge in m/s. Defaults to ``13.41`` (30 mph).
     verbose : boolean
@@ -2610,6 +2638,7 @@ def gather_files(test_method, truth_dir, prop_dir,
             if verbose:
                 print (i, "/", len(name_list), "num linestrings:", len(wkt_list))
                 print("image_file:", im_file, "wkt_list[:2]", wkt_list[:2])
+                print("weight_list[:2]", weight_list[:2])
 
             if (len(wkt_list) == 0) or (wkt_list[0] == 'LINESTRING EMPTY'):
                 continue
@@ -2683,6 +2712,7 @@ def gather_files(test_method, truth_dir, prop_dir,
             if verbose:
                 print("\n", i, "/", len(im_list), "num linestrings:", len(wkt_list))
                 print("image_file:", im_file, "wkt_list[:2]", wkt_list[:2])
+                print("weight_list[:3]", weight_list[:3])
                 print("image_id:", image_id)
 
 
@@ -2698,7 +2728,6 @@ def gather_files(test_method, truth_dir, prop_dir,
                 node_iter=node_iter,
                 edge_iter=edge_iter,
                 verbose=super_verbose)
-
             # refine G_gt?
             G_gt_init = _refine_gt_graph(G_gt_init0, im_file, 
                                     subgraph_filter_weight=gt_subgraph_filter_weight,
@@ -2812,8 +2841,8 @@ def gather_files(test_method, truth_dir, prop_dir,
 ###############################################################################
 def execute(output_name, gt_list, gp_list, root_list, im_loc_list=[],
             weight='length',
-            speed_key='speed_m/s',
-            travel_time_key='travel_time',
+            speed_key='inferred_speed_mps',
+            travel_time_key='travel_time_s',
             test_method='gt_json_prop_json',
             max_files=1000,
             linestring_delta=50,
@@ -2840,9 +2869,9 @@ def execute(output_name, gt_list, gp_list, root_list, im_loc_list=[],
     weight : str
         Edge key determining path length weights. Defaults to ``'length'``.
     speed_key : str
-        Edge key for speed. Defaults to ``'speed_m/s'``.
+        Edge key for speed. Defaults to ``'inferred_speed_mps'``.
     travel_time_key : str
-        Edge key for travel time. Defaults to ``'travel_time'``.
+        Edge key for travel time. Defaults to ``'travel_time_s'``.
     max_files : int
         Maximum number of files to analyze. Defaults to ``1000``.
     linestring_delta : float
@@ -3579,10 +3608,10 @@ def main():
     parser.add_argument('--max_files', default=100, type=int,
                         help='Maximum number of graphs to analyze')
     parser.add_argument('--weight', default='length', type=str,
-                        help='Weight for APLS metric [length, travel_time')
-    parser.add_argument('--speed_key', default='speed_m/s', type=str,
+                        help='Weight for APLS metric [length, travel_time_s')
+    parser.add_argument('--speed_key', default='inferred_speed_mps', type=str,
                         help='Key in edge properties for speed')
-    parser.add_argument('--travel_time_key', default='travel_time', type=str,
+    parser.add_argument('--travel_time_key', default='travel_time_s', type=str,
                         help='Key in edge properties for travel_time')
     parser.add_argument('--wkt_weight_key', default='travel_time_s', type=str,
                         help='Key in wkt files for edge weights')
