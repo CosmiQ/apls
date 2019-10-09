@@ -4,6 +4,11 @@
 Created on Mon Aug 26 15:30:33 2019
 
 @author: avanetten
+
+Execution example:
+    python /apls/apls/gt_graph_to_wkt.py  \
+    --root_dir=/spacenet/competitions/SN5_roads/train/AOI_7_Moscow/
+
 """
 
 import os
@@ -184,25 +189,6 @@ def gt_geojson_dir_to_wkt(geojson_dir, im_dir, output_csv_path,
 ###############################################################################
 if __name__ == "__main__":
 
-    # Single chip
-    #im_path = '/raid/cosmiq/spacenet/competitions/SN5_roads/train/AOI_7_Moscow/PS-RGB/SN5_roads_train_AOI_7_Moscow_PS-RGB_chip996.tif'
-    #geojson_path = '/raid/cosmiq/spacenet/competitions/SN5_roads/train/AOI_7_Moscow/geojson_roads_speed/SN5_roads_train_AOI_7_Moscow_geojson_roads_speed_chip996.geojson'
-    #weight_key = 'length'
-    #verbose = True
-    #
-    #gt_geojson_to_wkt(geojson_path, im_path, weight_key=weight_key,
-    #                  verbose=verbose)
-
-    # Entire directory
-#    im_dir = '/raid/cosmiq/spacenet/competitions/SN5_roads/train/AOI_7_Moscow/PS-RGB'
-#    geojson_dir = '/raid/cosmiq/spacenet/competitions/SN5_roads/train/AOI_7_Moscow/geojson_roads_speed'
-#    verbose = True
-#    
-#    weight_key = 'travel_time_s'
-#    output_csv_path = '/raid/cosmiq/spacenet/competitions/SN5_roads/train/AOI_7_Moscow/' \
-#        + 'geojson_roads_speed_wkt_' + weight_key + '.csv'
-
-
     parser = argparse.ArgumentParser()
     parser.add_argument('--root_dir', default='', type=str,
                         help='Root directory of geojson data')
@@ -231,11 +217,6 @@ if __name__ == "__main__":
     geojson_dir = os.path.join(root_dir, 'geojson_roads_speed')
     # get name
     out_prefix = '_'.join(root_dir.split('/')[-3:])
-#    if args.simplify_graph:
-#        out_name = out_prefix + 'geojson_roads_speed_wkt_weighted_simp.csv'
-#    else:
-#        out_name = out_prefix + 'geojson_roads_speed_wkt_weighted.csv'
-#    output_csv_path = os.path.join(root_dir, out_name)
     output_csv_path = os.path.join(root_dir, out_prefix + args.out_file_name)
 
     print("output_csv_path:", output_csv_path)
@@ -246,21 +227,3 @@ if __name__ == "__main__":
                                simplify=args.simplify_graph,
                                weight_keys=weight_keys,
                                verbose=verbose)
-
-    '''
-    Execute
-    
-    scp -r /raid/cosmiq/apls/apls/ 10.123.1.70:/raid/local/src/apls/
-    
-    python /raid/local/src/apls/apls/gt_graph_to_wkt.py  \
-        --root_dir=/nfs/data/cosmiq/spacenet/competitions/SN5_roads/tiles_upload/train/AOI_7_Moscow/
-    
-    python /raid/local/src/apls/apls/gt_graph_to_wkt.py  \
-        --root_dir=/nfs/data/cosmiq/spacenet/competitions/SN5_roads/tiles_upload/train/AOI_8_Mumbai/
-
-   python /raid/local/src/apls/apls/gt_graph_to_wkt.py  \
-        --root_dir=/nfs/data/cosmiq/spacenet/competitions/SN5_roads/tiles_upload/train/AOI_8_Mumbai/
-
-    
-        
-    '''
