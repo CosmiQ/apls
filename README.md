@@ -1,6 +1,6 @@
 <h1 align="center">APLS Metric</h1>
 <p align="center">
-<a href="http://www.cosmiqworks.org"><img src="http://www.cosmiqworks.org/wp-content/uploads/2016/02/cropped-CosmiQ-Works-Logo_R_RGB.png" width="350" alt="CosmiQ Works"></a>
+<a href="http://www.cosmiqworks.org"><img src="https://www.cosmiqworks.org/wp-content/uploads/2019/10/cosmiqworks-logo-r@2x-1.png" width="350" alt="CosmiQ Works"></a>
 <br>
 <br>
 </p>
