@@ -12,10 +12,10 @@ dependencies:
   - opencv=3.4.4
   - numpy=1.16.3
   - rtree=0.8.3
-  - networkx=2.3
   - rasterio=1.0.22
   - scipy=1.2.1
   - scikit-image=0.15.0
   - pip:
     - affine==2.2.2
     - GDAL>=2.2.0
+    - networkx>=2.4
