@@ -192,7 +192,7 @@ def G_to_kdtree(G_, x_coord='x', y_coord='y', verbose=False):
     # populate node array
     t1 = time.time()
     for i, n in enumerate(G_.nodes()):
-        n_props = G_.node[n]
+        n_props = G_.nodes[n]
         if x_coord == 'lon':
             lat, lon = n_props['lat'], n_props['lon']
             x, y = lon, lat
